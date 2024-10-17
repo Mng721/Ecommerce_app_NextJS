@@ -3,7 +3,7 @@ import { FaFacebookF } from "react-icons/fa";
 import { LuTwitter } from "react-icons/lu";
 import { FaInstagram } from "react-icons/fa";
 import { ImLinkedin2 } from "react-icons/im";
-import imgQR from "../../assets/footer/qr.png"
+import imgQR from "../../_assets/footer/qr.png"
 import imgAppStore from "../../assets/footer/app-store.png"
 import imgCHPlay from "../../assets/footer/google-play.png"
 import Image from "next/image";
