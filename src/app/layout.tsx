@@ -2,7 +2,8 @@ import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-import HeaderNavbar from "./_components/headernavbar";
+import HeaderNavbar from "./_components/header/headernavbar";
+import FooterContent from "./_components/footer/footer";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -17,6 +18,7 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <HeaderNavbar/>
       <body>{children}</body>
+      <FooterContent/>
     </html>
   );
 }

@@ -14,7 +14,7 @@ export default function HeaderNavbar() {
   return (
     <div className="h-auto bg-background">
       <header className="border-b">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="lg:container mx-auto px-4 py-3 flex items-center justify-between">
           <h1 className="text-2xl font-bold">Exclusive</h1>
           <nav className="hidden md:flex space-x-4 md:grow md:justify-around md:px-1 lg:px-32">
             <Link href="/" className="text-foreground hover:text-primary hidden xl:block">Home</Link>
