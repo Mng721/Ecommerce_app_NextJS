@@ -19,13 +19,13 @@ const HeaderContent = () => {
     {
       title: "iPhone 16 Series",
       description: "Up to 10% off Voucher",
-      image: "/placeholder.svg",
+      image: "https://utfs.io/f/GzuQWehHg8N7bW9v6xqX6tOdErfc8IHwieGCqJb27pSKFoYD",
       logo: "/placeholder.svg",
     },
     {
       title: "Samsung Galaxy S23",
       description: "Get 15% cashback on Samsung",
-      image: "/placeholder.svg",
+      image: "https://utfs.io/f/GzuQWehHg8N79x6idKr8VCw76ugnHZdeBMThJGoUbzP3aqmk",
       logo: "/placeholder.svg",
     },
     {
@@ -37,13 +37,13 @@ const HeaderContent = () => {
     {
       title: "Sony PlayStation 5",
       description: "Save $50 on selected bundles",
-      image: "/placeholder.svg",
+      image: "https://images2.thanhnien.vn/528068263637045248/2023/10/12/playstation-5-new-look-ps5-slim-1697089426045463180820.jpg",
       logo: "/placeholder.svg",
     },
     {
       title: "Nintendo Switch OLED",
       description: "Buy now, pay later with 0% APR",
-      image: "/placeholder.svg",
+      image: "https://sb.tinhte.vn/2021/10/5687010_cover_home_nintendo_switch_oled_1.jpg",
       logo: "/placeholder.svg",
     },
   ]
@@ -88,6 +88,7 @@ const HeaderContent = () => {
                         index === currentSlide ? 'opacity-100' : 'opacity-0' 
                       } `}
                     >
+                      <img src={slide.image} alt={`${slide.title}-img`} className='w-full h-full object-cover'/>
                       <div className="p-4 md:p-8 flex flex-col md:flex-row items-center justify-between h-full">
                         <div className="mb-4 md:mb-0 z-10">
                           <h2 className="text-2xl md:text-4xl font-bold mb-4">{slide.title}</h2>
