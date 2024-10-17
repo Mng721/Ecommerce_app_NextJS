@@ -20,7 +20,7 @@ export default function HeaderNavbar() {
             <Link href="/" className="text-foreground hover:text-primary hidden xl:block">Home</Link>
             <Link href="/contact" className="text-foreground hover:text-primary">Contact</Link>
             <Link href="/about" className="text-foreground hover:text-primary">About</Link>
-            <Link href="/signup" className="text-foreground hover:text-primary">Sign Up</Link>
+            <Link href="/login" className="text-foreground hover:text-primary">Log in</Link>
           </nav>
           <div className="flex items-center space-x-4">
             <div className="hidden md:block relative">

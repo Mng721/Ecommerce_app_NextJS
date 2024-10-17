@@ -7,6 +7,7 @@ import imgQR from "../../_assets/footer/qr.png"
 import imgAppStore from "../../_assets/footer/app-store.png"
 import imgCHPlay from "../../_assets/footer/google-play.png"
 import Image from "next/image";
+import { Input } from "~/components/ui/input";
 const FooterContent = () => {
   return (
     <div className="bg-black px-28 py-28">
@@ -15,13 +16,11 @@ const FooterContent = () => {
           <h2 className="text-white pb-2 text-xl">Exclusive</h2>
           <h4 className="text-white">Subcribe</h4>
           <p className="text-white">Get 10% of your first order</p>
-          <input
-            type="email"
-            className="form-control bg-black text-white mt-3 p-2 text-l border-white placeholder-zinc-500"
-            id="exampleInputEmail1"
-            aria-describedby="emailHelp"
-            placeholder="Enter your email"
-          />
+          <Input 
+      type="email" 
+      placeholder="Enter your email" 
+      className="border-white bg-black text-white placeholder-gray-400"
+    />
         </div>
         <hr className="separator border-gray-400 mt-3 mx-2" />
 
@@ -62,10 +61,10 @@ const FooterContent = () => {
             </div>
             <div className="appstore-chplay-code-img flex flex-col justify-between">
               <div className="appstore-img-container">
-                <Image src={imgAppStore} alt="appstore-img" width={120} height={40}/>
+                <Image src={imgAppStore} alt="appstore-img" width={130} height={50}/>
               </div>
               <div className="chplay-img-container">
-                <Image src={imgCHPlay} alt="chplay-img" width={120} height={40} />
+                <Image src={imgCHPlay} alt="chplay-img" width={130} height={50} />
               </div>
             </div>
           </div>

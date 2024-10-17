@@ -31,7 +31,7 @@ const HeaderContent = () => {
     {
       title: "MacBook Air M2",
       description: "Free AirPods with purchase",
-      image: "/placeholder.svg",
+      image: "https://bizweb.dktcdn.net/100/444/581/products/apple-macbook-pro-14-16-inch-jpeg-b2dc7a7d-d44c-4d26-ad51-a97756e6e9a7.jpg?v=1709350560137",
       logo: "/placeholder.svg",
     },
     {
