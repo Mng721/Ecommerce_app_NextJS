@@ -4,16 +4,16 @@ import { Rating } from "@mui/material";
 import { MdFavoriteBorder } from "react-icons/md";
 import { IoEyeOutline } from "react-icons/io5";
 import { useState } from "react";
-const ProductCart = (props: { sale?: number|string; newItem?: boolean; listColor?: any; rating?: any; price: number | string; salePrice?: number | string; reviewCount?: number | undefined; name: string | undefined; imgSrc?: any; }) => {
-    const {sale,
-        newItem,
-        listColor,
-        rating,
-        price = "160",
-        salePrice = "120",
-        reviewCount = 55,
-        name = "HAVIT HV-G92 Gamepad",
-        imgSrc} = props
+const ProductCart = (props: { sale?: number | string; newItem?: boolean; listColor?: any; rating?: any; price: number | string; salePrice?: number | string; reviewCount?: number | undefined; name: string | undefined; imgSrc?: any; }) => {
+  const { sale,
+    newItem,
+    listColor,
+    rating,
+    price = "160",
+    salePrice = "120",
+    reviewCount = 55,
+    name = "HAVIT HV-G92 Gamepad",
+    imgSrc } = props
   const [colorPicked, setColorPicked] = useState(listColor ? listColor[0] : "");
   const handleColorPicked = (color: any) => {
     setColorPicked(color);
@@ -24,12 +24,12 @@ const ProductCart = (props: { sale?: number|string; newItem?: boolean; listColor
         <img src={imgSrc ? imgSrc : "https://m.media-amazon.com/images/I/61UDx9jF0mL._AC_SL1315_.jpg"} alt="product-image" className="size-[260px] object-cover"></img>
         {newItem && <div className="new-item item-tag absolute text-white rounded text-center w-fit py-[4px] px-2 top-2 left-2 bg-green-500">New</div>}
         {sale && <div className="sale-item item-tag absolute text-white rounded text-center w-fit py-[4px] px-2 top-2 left-2 bg-red-500">{sale}%</div>}
-        <div className="add-to-card-text absolute bottom-[-60px] right-0 left-0 h-auto text-center p-2 text-white bg-black text-xl font-normal cursor-pointer group-hover:-translate-y-[60px] duration-200">Add to card</div>
-        <div className="product-icon-container d-flex flex-column gap-2 top-1 right-1 absolute">
-          <div className="product-icon flex items-center justify-center size-4 rounded-full bg-white cursor-pointer favorite-icon">
+        <div className="add-to-card-text absolute bottom-[-60px] right-0 left-0 h-auto text-center p-2 text-white bg-black text-xl font-normal cursor-pointer group-hover:-translate-y-[60px] duration-200 hover:bg-slate-800">Add to card</div>
+        <div className="product-icon-container flex flex-col gap-2 top-1 right-1 absolute">
+          <div className="product-icon flex items-center justify-center size-7 rounded-full bg-slate-200 cursor-pointer favorite-icon  hover:bg-slate-400">
             <MdFavoriteBorder />
           </div>
-          <div className="product-icon flex items-center justify-center size-4 rounded-full bg-white cursor-pointer eye-icon">
+          <div className="product-icon flex items-center justify-center size-7 rounded-full bg-slate-200 cursor-pointer eye-icon hover:bg-slate-400">
             <IoEyeOutline />
           </div>
         </div>

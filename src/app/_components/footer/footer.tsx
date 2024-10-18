@@ -16,11 +16,11 @@ const FooterContent = () => {
           <h2 className="text-white pb-2 text-xl">Exclusive</h2>
           <h4 className="text-white">Subcribe</h4>
           <p className="text-white">Get 10% of your first order</p>
-          <Input 
-      type="email" 
-      placeholder="Enter your email" 
-      className="border-white bg-black text-white placeholder-gray-400"
-    />
+          <Input
+            type="email"
+            placeholder="Enter your email"
+            className="border-white bg-black text-white placeholder-gray-400"
+          />
         </div>
         <hr className="separator border-gray-400 mt-3 mx-2" />
 
@@ -61,7 +61,7 @@ const FooterContent = () => {
             </div>
             <div className="appstore-chplay-code-img flex flex-col justify-between">
               <div className="appstore-img-container">
-                <Image src={imgAppStore} alt="appstore-img" width={130} height={50}/>
+                <Image src={imgAppStore} alt="appstore-img" width={130} height={50} />
               </div>
               <div className="chplay-img-container">
                 <Image src={imgCHPlay} alt="chplay-img" width={130} height={50} />

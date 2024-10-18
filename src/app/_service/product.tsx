@@ -1,13 +1,19 @@
 import axios from "axios";
+import { Product } from "../_interfaces/product";
 
-const getAllProduct = () => {
-  return axios.get("https://6705e517031fd46a83114bf5.mockapi.io/app");
+const getAllProduct = async (): Promise<Product[]> => {
+  const { data } = await axios.get<Product[]>(
+    `https://6705e517031fd46a83114bf5.mockapi.io/app`
+  );
+  return data;
 };
 
-const getProductPaging = (page: number, limit: number) => {
-  return axios.get(
-    `https://6705e517031fd46a83114bf5.mockapi.io/app?page=${page}&limit=${limit}`
+
+const getProductPaging = async (pageParam: any): Promise<any> => {
+  const { data } = await axios.get<any>(
+    `https://6705e517031fd46a83114bf5.mockapi.io/app?page=${pageParam}&limit=6`
   );
+  return data;
 };
 
 const searchProduct = (searchParam: string, page: number) => {
