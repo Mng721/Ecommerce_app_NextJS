@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
@@ -11,11 +11,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   getAuth,
-  FacebookAuthProvider,
-  signInWithEmailAndPassword,
-  browserLocalPersistence,
-  setPersistence,
-  browserSessionPersistence,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { firebaseApp } from '../_service/firebase'
 import { useRouter } from 'next/navigation'
@@ -58,6 +54,19 @@ export default function LoginForm({
       console.error("Error signing in:", error);
     }
   };
+
+
+  useLayoutEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        router.push("/")
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <Card className="w-full max-w-md mx-auto my-40">
       <CardHeader>

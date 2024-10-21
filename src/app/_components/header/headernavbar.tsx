@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Input } from "~/components/ui/input"
 import { Card, CardContent } from "~/components/ui/card"
 import { ShoppingCart, Heart, User, Search, Menu } from 'lucide-react'
@@ -9,8 +9,11 @@ import { Button } from '~/components/ui/button'
 import { searchProduct } from '~/app/_service/product'
 import { Product } from '~/app/_interfaces/product'
 import SearchDropDownContent from './searchdropdowncontent'
+import { getAuth, onAuthStateChanged, User as FirebaseUser, signOut } from 'firebase/auth'
+import { firebaseApp } from '~/app/_service/firebase'
 
 export default function HeaderNavbar() {
+  const auth = getAuth(firebaseApp);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [searchParam, setSearchParam] = useState("")
@@ -20,11 +23,39 @@ export default function HeaderNavbar() {
   const [hasMore, setHasMore] = useState(true);
   const element = document?.getElementById("scrollableDiv");
   const [searchDropbarOpen, setSearchDropbarOpen] = useState(false);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const catMenu = useRef(null);
 
+  useLayoutEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser)
+    });
+
+    return () => unsubscribe();
+  }, []);
   const fetchMoreItem = () => {
     setCurrentPage(currentPage + 1);
   };
 
+  const handleLogout = () => {
+    setIsDropdownOpen(false)
+    signOut(auth)
+      .then(() => {
+        window.location.reload();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  //close dropdown khi click ra ngoài
+  const closeOpenMenus = (e: MouseEvent) => {
+    if (isDropdownOpen && !catMenu.current?.contains(e.target)) {
+      setIsDropdownOpen(false);
+    }
+  };
+  document.addEventListener("mousedown", closeOpenMenus);
 
   //call khi có search value
   const handleSearch = async (searchValue: string, page: number) => {
@@ -71,7 +102,7 @@ export default function HeaderNavbar() {
             <Link href="/" className="text-foreground hover:text-primary hidden xl:block">Home</Link>
             <Link href="/contact" className="text-foreground hover:text-primary">Contact</Link>
             <Link href="/about" className="text-foreground hover:text-primary">About</Link>
-            <Link href="/login" className="text-foreground hover:text-primary">Log in</Link>
+            {!user && <Link href="/login" className="text-foreground hover:text-primary">Log in</Link>}
           </nav>
           <div className="flex items-center space-x-4">
             <div className="hidden md:block relative">
@@ -114,18 +145,27 @@ export default function HeaderNavbar() {
               {isDropdownOpen && (
                 <Card className="absolute right-0 mt-2 w-72 z-10 bg-black bg-opacity-40 backdrop-blur-sm" >
                   <CardContent className="p-2">
-                    <nav className="space-y-2">
+
+                    {user && (
+                      <div className="">
+                        <div className="px-4 py-2 text-white text-xl">
+                          Hello, <em>{user.displayName}</em>
+                        </div>
+                        <div className="w-[90%] border-t-[1px] border-white border-solid mx-auto"></div>
+                      </div>
+                    )}
+                    <nav className="space-y-2" ref={catMenu}>
                       <Link href="/account" className="block px-4 py-2 hover:bg-slate-700 rounded-md text-white text-l">Manage My Account</Link>
                       <Link href="/orders" className="block px-4 py-2 hover:bg-slate-700 rounded-md text-white text-l">My Order</Link>
                       <Link href="/cancellations" className="block px-4 py-2 hover:bg-slate-700 rounded-md text-white text-l">My Cancellations</Link>
                       <Link href="/reviews" className="block px-4 py-2 hover:bg-slate-700 rounded-md text-white text-l">My Reviews</Link>
-                      <Link href="/logout" className="block px-4 py-2 hover:bg-slate-700 rounded-md text-white text-l">Logout</Link>
+                      <Link href="/" className="block px-4 py-2 hover:bg-slate-700 rounded-md text-white text-l" onClick={handleLogout}>Logout</Link>
                     </nav>
                   </CardContent>
                 </Card>
               )}
             </div>
-            <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+            <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} ref={catMenu}>
               <Menu className="h-5 w-5" />
             </Button>
           </div>
@@ -136,7 +176,7 @@ export default function HeaderNavbar() {
               <Link href="/" className="block text-foreground hover:text-primary max-w-xl m-auto">Home</Link>
               <Link href="/contact" className="block text-foreground hover:text-primary max-w-xl m-auto">Contact</Link>
               <Link href="/about" className="block text-foreground hover:text-primary max-w-xl m-auto">About</Link>
-              <Link href="/signup" className="block text-foreground hover:text-primary max-w-xl m-auto">Sign Up</Link>
+              {!user && <Link href="/signup" className="block text-foreground hover:text-primary max-w-xl m-auto">Sign Up</Link>}
             </nav>
             <div className="px-4 py-2">
               <Input type="search" placeholder="What are you looking for?" className="w-full" value={searchParam}
