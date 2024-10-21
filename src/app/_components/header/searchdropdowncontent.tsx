@@ -7,7 +7,7 @@ const SearchDropDownContent = (props: { listSearchProduct: any; fetchMoreItem: a
 
     return (
         <div
-            className={'absolute border-r-[1px] border-l-[1px] border-b-[1px] overflow-scroll rounded-b-md no-scrollbar max-h-[40vh] top-12 bg-white w-full border-solid border-black z-20 flex flex-col gap-1'}
+            className={'md:absolute border-r-[1px] border-l-[1px] border-b-[1px] overflow-scroll rounded-b-md no-scrollbar max-h-[40vh] md:top-12 bg-white md:w-full border-solid border-black z-20 flex flex-col gap-1'}
             id="scrollableDiv"
         >
             {listSearchProduct.length > 0 ? (

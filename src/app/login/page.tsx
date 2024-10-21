@@ -5,15 +5,26 @@ import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "~/components/ui/card"
 import { Alert, AlertDescription } from "~/components/ui/alert"
-import { AlertCircle, Eye, EyeOff, Facebook, Mail } from "lucide-react"
+import { AlertCircle, Eye, EyeOff, Facebook } from "lucide-react"
 
-export default function LoginForm({ 
-  onSubmit = async () => {}, 
-  onGoogleLogin = async () => {}, 
-  onFacebookLogin = async () => {} 
-}: { 
+import {
+  signInWithPopup,
+  GoogleAuthProvider,
+  getAuth,
+  FacebookAuthProvider,
+  signInWithEmailAndPassword,
+  browserLocalPersistence,
+  setPersistence,
+  browserSessionPersistence,
+} from "firebase/auth";
+import { firebaseApp } from '../_service/firebase'
+import { useRouter } from 'next/navigation'
+
+export default function LoginForm({
+  onSubmit = async () => { },
+  onFacebookLogin = async () => { }
+}: {
   onSubmit?: (email: string, password: string) => Promise<void>,
-  onGoogleLogin?: () => Promise<void>,
   onFacebookLogin?: () => Promise<void>
 }) {
   const [email, setEmail] = useState('')
@@ -21,6 +32,8 @@ export default function LoginForm({
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const auth = getAuth(firebaseApp);
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,7 +48,16 @@ export default function LoginForm({
       setIsLoading(false)
     }
   }
-
+  const onGoogleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      router.push("/")
+    } catch (error) {
+      // Handle Errors here.
+      console.error("Error signing in:", error);
+    }
+  };
   return (
     <Card className="w-full max-w-md mx-auto my-40">
       <CardHeader>
@@ -51,7 +73,7 @@ export default function LoginForm({
               type="email"
               placeholder="you@example.com"
               value={email}
-              onChange={(e:any) => setEmail(e.target.value)}
+              onChange={(e: any) => setEmail(e.target.value)}
               required
             />
           </div>
@@ -62,7 +84,7 @@ export default function LoginForm({
                 id="password"
                 type={showPassword ? "text" : "password"}
                 value={password}
-                onChange={(e:any) => setPassword(e.target.value)}
+                onChange={(e: any) => setPassword(e.target.value)}
                 required
               />
               <Button

@@ -7,7 +7,7 @@ import { Button } from "~/components/ui/button"
 import ProductCard from '../../productcard'
 import { getAllProduct, getProductPaging } from '~/app/_service/product'
 import { Product } from '~/app/_interfaces/product'
-
+import { set } from 'zod'
 export default function FlashSalesCarousel() {
     const ITEM_LIMIT = 6;
     const [listProduct, setListProduct] = useState<Product[]>([]);
@@ -15,12 +15,25 @@ export default function FlashSalesCarousel() {
     const [currentPage, setCurrentPage] = useState(1);
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false })
     const [countdown, setCountdown] = useState({ days: 70, hours: 15, minutes: 42, seconds: 5 })
-
+    var settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+    };
     const handleFetchPagingProduct = async () => {
         let res = await getProductPaging(currentPage, ITEM_LIMIT);
         setListProduct(res.data)
     };
 
+    const handleGetNextPage = async () => {
+        const nextPage = currentPage + 1;
+        setCurrentPage(nextPage)
+        let res = await getProductPaging(nextPage, ITEM_LIMIT);
+        setListProduct([...listProduct, ...res.data])
+        scrollNext()
+    }
     //Scroll pre func
     const scrollPrev = useCallback(() => {
         if (emblaApi) emblaApi.scrollPrev()
@@ -28,7 +41,9 @@ export default function FlashSalesCarousel() {
 
     //Scroll next func
     const scrollNext = useCallback(() => {
-        if (emblaApi) emblaApi.scrollNext()
+        if (emblaApi) {
+            emblaApi.scrollNext()
+        }
     }, [emblaApi])
 
     //Lấy tất cả user
@@ -81,7 +96,7 @@ export default function FlashSalesCarousel() {
                     <Button variant="outline" size="icon" onClick={scrollPrev}>
                         <ChevronLeft className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="icon" onClick={scrollNext}>
+                    <Button variant="outline" size="icon" onClick={handleGetNextPage}>
                         <ChevronRight className="h-4 w-4" />
                     </Button>
                 </div>
