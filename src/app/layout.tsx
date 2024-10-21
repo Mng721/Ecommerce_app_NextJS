@@ -3,8 +3,6 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import HeaderNavbar from "./_components/header/headernavbar";
 import FooterContent from "./_components/footer/footer";
-import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Providers from "./_components/Provider";
 export const metadata: Metadata = {
   title: "Create T3 App",

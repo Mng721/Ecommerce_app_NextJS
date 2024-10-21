@@ -4,7 +4,7 @@ import { Rating } from "@mui/material";
 import { MdFavoriteBorder } from "react-icons/md";
 import { IoEyeOutline } from "react-icons/io5";
 import { useState } from "react";
-const ProductCart = (props: { sale?: number | string; newItem?: boolean; listColor?: any; rating?: any; price: number | string; salePrice?: number | string; reviewCount?: number | undefined; name: string | undefined; imgSrc?: any; }) => {
+const ProductCard = (props: { sale?: number | string; newItem?: boolean; listColor?: any; rating?: any; price: number | string; salePrice?: number | string; reviewCount?: number | undefined; name: string | undefined; imgSrc?: any; }) => {
   const { sale,
     newItem,
     listColor,
@@ -19,9 +19,9 @@ const ProductCart = (props: { sale?: number | string; newItem?: boolean; listCol
     setColorPicked(color);
   };
   return (
-    <div className="cart-item-container mx-auto bg-white rounded max-w-64 min-h-[420px] flex gap-1 flex-col relative">
+    <div className="cart-item-container mx-auto bg-white rounded max-w-64 max-h-[420px] flex gap-1 flex-col relative">
       <div className="img-container relative w-fit rounded bg-white overflow-hidden group">
-        <img src={imgSrc ? imgSrc : "https://m.media-amazon.com/images/I/61UDx9jF0mL._AC_SL1315_.jpg"} alt="product-image" className="size-[260px] object-cover"></img>
+        <img src={imgSrc ? imgSrc : "https://m.media-amazon.com/images/I/61UDx9jF0mL._AC_SL1315_.jpg"} alt={`product-img-${name}`} className="size-[260px] object-cover"></img>
         {newItem && <div className="new-item item-tag absolute text-white rounded text-center w-fit py-[4px] px-2 top-2 left-2 bg-green-500">New</div>}
         {sale && <div className="sale-item item-tag absolute text-white rounded text-center w-fit py-[4px] px-2 top-2 left-2 bg-red-500">{sale}%</div>}
         <div className="add-to-card-text absolute bottom-[-60px] right-0 left-0 h-auto text-center p-2 text-white bg-black text-xl font-normal cursor-pointer group-hover:-translate-y-[60px] duration-200 hover:bg-slate-800">Add to card</div>
@@ -102,4 +102,4 @@ const ProductCart = (props: { sale?: number | string; newItem?: boolean; listCol
   );
 };
 
-export default ProductCart;
+export default ProductCard;

@@ -1,15 +1,67 @@
 "use client"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Input } from "~/components/ui/input"
 import { Card, CardContent } from "~/components/ui/card"
 import { ShoppingCart, Heart, User, Search, Menu } from 'lucide-react'
 import Link from 'next/link'
+import { useDebounce } from "use-debounce";
 import { Button } from '~/components/ui/button'
+import { searchProduct } from '~/app/_service/product'
+import { Product } from '~/app/_interfaces/product'
+import SearchDropDownContent from './searchdropdowncontent'
 
 export default function HeaderNavbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [searchParam, setSearchParam] = useState("")
+  const [currentPage, setCurrentPage] = useState(1);
+  const [debouncedValue] = useDebounce(searchParam, 500);
+  const [listSearchProduct, setListSearchProduct] = useState<Product[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const element = document.getElementById("scrollableDiv");
+  const [searchDropbarOpen, setSearchDropbarOpen] = useState(false);
 
+
+  const fetchMoreItem = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+
+  //call khi có search value
+  const handleSearch = async (searchValue: string, page: number) => {
+    try {
+      let res = await searchProduct(searchValue, page);
+      if (res.status === 200) {
+        if (page === 1) {
+          setListSearchProduct(res.data);
+        } else {
+          setListSearchProduct([...listSearchProduct, ...res.data]);
+        }
+      }
+
+      if (res.data.length < 10) {
+        setHasMore(false);
+        return;
+      } else {
+        setHasMore(true);
+        return;
+      }
+    } catch (e) {
+      setListSearchProduct([]);
+    }
+  };
+
+
+  //call khi focus vào input
+  const setFocus = () => {
+    setSearchDropbarOpen(true);
+    setCurrentPage(1);
+    setHasMore(true);
+  };
+
+  useEffect(() => {
+    handleSearch(debouncedValue, currentPage);
+  }, [currentPage, debouncedValue]);
 
   return (
     <div className="h-auto bg-background">
@@ -24,8 +76,31 @@ export default function HeaderNavbar() {
           </nav>
           <div className="flex items-center space-x-4">
             <div className="hidden md:block relative">
-              <Input type="search" placeholder="What are you looking for?" className="pl-8 pr-4" />
+              <Input type="search" placeholder="What are you looking for?" className="pl-8 pr-4 active:border-[1px]"
+                value={searchParam}
+                onChange={(event) => {
+                  setCurrentPage(1);
+                  if (element?.scrollTop) element.scrollTop = 0;
+
+                  setSearchParam(event.target.value);
+                }}
+                onSubmit={() => {
+                  console.log(searchParam);
+                }}
+                onFocus={setFocus}
+                onBlur={() => {
+                  setSearchDropbarOpen(false);
+                  if (element?.scrollTop) element.scrollTop = 0;
+
+                }} />
               <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
+
+              {searchDropbarOpen &&
+                <SearchDropDownContent
+                  listSearchProduct={listSearchProduct}
+                  hasMore={hasMore}
+                  fetchMoreItem={fetchMoreItem}
+                />}
             </div>
             <Button variant="ghost" size="icon" className="hidden md:inline-flex">
               <Heart className="h-5 w-5" />
