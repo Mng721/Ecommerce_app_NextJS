@@ -18,9 +18,8 @@ export default function HeaderNavbar() {
   const [debouncedValue] = useDebounce(searchParam, 500);
   const [listSearchProduct, setListSearchProduct] = useState<Product[]>([]);
   const [hasMore, setHasMore] = useState(true);
-  const element = document.getElementById("scrollableDiv");
+  const element = document?.getElementById("scrollableDiv");
   const [searchDropbarOpen, setSearchDropbarOpen] = useState(false);
-
 
   const fetchMoreItem = () => {
     setCurrentPage(currentPage + 1);
@@ -76,7 +75,7 @@ export default function HeaderNavbar() {
           </nav>
           <div className="flex items-center space-x-4">
             <div className="hidden md:block relative">
-              <Input type="search" placeholder="What are you looking for?" className="pl-8 pr-4 active:border-[1px]"
+              <Input type="search" placeholder="What are you looking for?" className="pl-8 pr-4"
                 value={searchParam}
                 onChange={(event) => {
                   setCurrentPage(1);
@@ -96,11 +95,12 @@ export default function HeaderNavbar() {
               <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
 
               {searchDropbarOpen &&
-                <SearchDropDownContent
-                  listSearchProduct={listSearchProduct}
-                  hasMore={hasMore}
-                  fetchMoreItem={fetchMoreItem}
-                />}
+                <div className={'absolute border-r-[1px] border-l-[1px] border-b-[1px] overflow-scroll rounded-b-md no-scrollbar max-h-[40vh] top-12 bg-white w-full border-solid border-black z-20 flex flex-col gap-1'}>
+                  <SearchDropDownContent
+                    listSearchProduct={listSearchProduct}
+                    hasMore={hasMore}
+                    fetchMoreItem={fetchMoreItem}
+                  /></div>}
             </div>
             <Button variant="ghost" size="icon" className="hidden md:inline-flex">
               <Heart className="h-5 w-5" />
@@ -140,7 +140,29 @@ export default function HeaderNavbar() {
               <Link href="/signup" className="block text-foreground hover:text-primary max-w-xl m-auto">Sign Up</Link>
             </nav>
             <div className="px-4 py-2">
-              <Input type="search" placeholder="What are you looking for?" className="w-full" />
+              <Input type="search" placeholder="What are you looking for?" className="w-full" value={searchParam}
+                onChange={(event) => {
+                  setCurrentPage(1);
+                  if (element?.scrollTop) element.scrollTop = 0;
+
+                  setSearchParam(event.target.value);
+                }}
+                onSubmit={() => {
+                  console.log(searchParam);
+                }}
+                onFocus={setFocus}
+                onBlur={() => {
+                  setSearchDropbarOpen(false);
+                  if (element?.scrollTop) element.scrollTop = 0;
+
+                }} />
+
+              {searchDropbarOpen && isMobileMenuOpen &&
+                <SearchDropDownContent
+                  listSearchProduct={listSearchProduct}
+                  hasMore={hasMore}
+                  fetchMoreItem={fetchMoreItem}
+                />}
             </div>
           </div>
         )}
