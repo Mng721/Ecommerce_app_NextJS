@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useState, useEffect, useCallback, useLayoutEffect } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -7,7 +6,6 @@ import { Button } from "~/components/ui/button"
 import ProductCard from '../../productcard'
 import { getAllProduct, getProductPaging } from '~/app/_service/product'
 import { Product } from '~/app/_interfaces/product'
-import { set } from 'zod'
 export default function FlashSalesCarousel() {
     const ITEM_LIMIT = 6;
     const [listProduct, setListProduct] = useState<Product[]>([]);
@@ -27,13 +25,35 @@ export default function FlashSalesCarousel() {
         setListProduct(res.data)
     };
 
+    //chuyển về trang trước 
+    const handleGetPreviousPage = async () => {
+        let previousPage = currentPage - 1;
+        if (previousPage === 0) {
+            return;
+        }
+        setCurrentPage(previousPage);
+        scrollPrev()
+    }
+
+    //chuyển đến trang tiếp theo
     const handleGetNextPage = async () => {
-        const nextPage = currentPage + 1;
-        setCurrentPage(nextPage)
+        if (
+            //kiểm tra nếu currentpage vẫn còn data từ lần call API trước hoặc hết data từ API thì chỉ chuyển đến trang tiếp theo
+            currentPage * ITEM_LIMIT < listProduct.length ||
+            listProduct.length >= 100
+        ) {
+            scrollNext()
+            return;
+        }
+        //Nếu vẫn có thể gọi tiếp data từ API thì gọi tiếp data từ page tiếp theo
+        let nextPage = currentPage + 1;
+        setCurrentPage(nextPage);
         let res = await getProductPaging(nextPage, ITEM_LIMIT);
-        setListProduct([...listProduct, ...res.data])
+        let newList = [...listProduct, ...res.data];
+        setListProduct(newList);
         scrollNext()
     }
+
     //Scroll pre func
     const scrollPrev = useCallback(() => {
         if (emblaApi) emblaApi.scrollPrev()
@@ -93,7 +113,7 @@ export default function FlashSalesCarousel() {
                     </div>
                 </div>
                 <div className="flex gap-2 items-center">
-                    <Button variant="outline" size="icon" onClick={scrollPrev}>
+                    <Button variant="outline" size="icon" onClick={handleGetPreviousPage}>
                         <ChevronLeft className="h-4 w-4" />
                     </Button>
                     <Button variant="outline" size="icon" onClick={handleGetNextPage}>
