@@ -95,12 +95,11 @@ export default function HeaderNavbar() {
               <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
 
               {searchDropbarOpen &&
-                <div className={'absolute border-r-[1px] border-l-[1px] border-b-[1px] overflow-scroll rounded-b-md no-scrollbar max-h-[40vh] top-12 bg-white w-full border-solid border-black z-20 flex flex-col gap-1'}>
-                  <SearchDropDownContent
-                    listSearchProduct={listSearchProduct}
-                    hasMore={hasMore}
-                    fetchMoreItem={fetchMoreItem}
-                  /></div>}
+                <SearchDropDownContent
+                  listSearchProduct={listSearchProduct}
+                  hasMore={hasMore}
+                  fetchMoreItem={fetchMoreItem}
+                />}
             </div>
             <Button variant="ghost" size="icon" className="hidden md:inline-flex">
               <Heart className="h-5 w-5" />
