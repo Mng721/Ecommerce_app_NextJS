@@ -10,20 +10,26 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 export default function FlashSalesCarousel() {
     const ITEM_LIMIT = 5;
     const [listProduct, setListProduct] = useState<Product[]>([]);
-
+    const [hasMore, setHasMore] = useState(true)
     const [currentPage, setCurrentPage] = useState(1);
     const [emblaRef, emblaApi] = useEmblaCarousel({ slidesToScroll: 5, align: 'start', loop: false })
     const [countdown, setCountdown] = useState({ days: 70, hours: 15, minutes: 42, seconds: 5 })
-    var settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-    };
-    const handleFetchPagingProduct = async () => {
-        let res = await getProductPaging(currentPage, ITEM_LIMIT);
-        setListProduct(res.data)
+    const [isLoading, setIsLoading] = useState(false)
+    const handleFetchPagingProduct = async (page: number) => {
+        setIsLoading(true)
+        try {
+            let res = await getProductPaging(page, ITEM_LIMIT);
+            if (res.data.length < ITEM_LIMIT) {
+                setHasMore(false)
+            }
+            let newList = [...listProduct, ...res.data];
+            console.log(listProduct, newList)
+            setListProduct(newList);
+        } catch (error) {
+            console.error('Error fetching items:', error)
+        } finally {
+            setIsLoading(false)
+        }
     };
 
     //chuyển về trang trước 
@@ -37,7 +43,7 @@ export default function FlashSalesCarousel() {
     }
 
     //chuyển đến trang tiếp theo
-    const handleGetNextPage = async () => {
+    const handleGetNextPage = () => {
         let nextPage = currentPage + 1;
         setCurrentPage(nextPage);
         if (
@@ -49,9 +55,9 @@ export default function FlashSalesCarousel() {
             return;
         }
         //Nếu vẫn có thể gọi tiếp data từ API thì gọi tiếp data từ page tiếp theo
-        let res = await getProductPaging(nextPage, ITEM_LIMIT);
-        let newList = [...listProduct, ...res.data];
-        setListProduct(newList);
+        if (!isLoading && hasMore) {
+            handleFetchPagingProduct(nextPage)
+        }
         scrollNext();
     }
 
@@ -73,7 +79,7 @@ export default function FlashSalesCarousel() {
         setListProduct(res.data)
     }
     useLayoutEffect(() => {
-        handleFetchPagingProduct();
+        handleFetchPagingProduct(1);
     }, []);
     useEffect(() => {
         const timer = setInterval(() => {
