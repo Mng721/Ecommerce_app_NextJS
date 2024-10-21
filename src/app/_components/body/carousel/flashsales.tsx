@@ -6,12 +6,13 @@ import { Button } from "~/components/ui/button"
 import ProductCard from '../../productcard'
 import { getAllProduct, getProductPaging } from '~/app/_service/product'
 import { Product } from '~/app/_interfaces/product'
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "~/components/ui/carousel"
 export default function FlashSalesCarousel() {
-    const ITEM_LIMIT = 6;
+    const ITEM_LIMIT = 5;
     const [listProduct, setListProduct] = useState<Product[]>([]);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false })
+    const [emblaRef, emblaApi] = useEmblaCarousel({ slidesToScroll: 5, align: 'start', loop: false })
     const [countdown, setCountdown] = useState({ days: 70, hours: 15, minutes: 42, seconds: 5 })
     var settings = {
         dots: true,
@@ -37,6 +38,8 @@ export default function FlashSalesCarousel() {
 
     //chuyển đến trang tiếp theo
     const handleGetNextPage = async () => {
+        let nextPage = currentPage + 1;
+        setCurrentPage(nextPage);
         if (
             //kiểm tra nếu currentpage vẫn còn data từ lần call API trước hoặc hết data từ API thì chỉ chuyển đến trang tiếp theo
             currentPage * ITEM_LIMIT < listProduct.length ||
@@ -46,12 +49,10 @@ export default function FlashSalesCarousel() {
             return;
         }
         //Nếu vẫn có thể gọi tiếp data từ API thì gọi tiếp data từ page tiếp theo
-        let nextPage = currentPage + 1;
-        setCurrentPage(nextPage);
         let res = await getProductPaging(nextPage, ITEM_LIMIT);
         let newList = [...listProduct, ...res.data];
         setListProduct(newList);
-        scrollNext()
+        scrollNext();
     }
 
     //Scroll pre func
@@ -124,7 +125,7 @@ export default function FlashSalesCarousel() {
             <div className="overflow-hidden my-8 h-fit" ref={emblaRef}>
                 <div className="flex">
                     {listProduct.map((product) => (
-                        <div key={product.id} className="flex-[0_0_20%] min-w-0 px-2">
+                        <div key={product.id} className="md:flex-[0_0_20%] flex-[0_0_25%] min-w-0 px-2">
                             <ProductCard price={product.price} name={product.name} imgSrc={product.avatar} />
                         </div>
                     ))}

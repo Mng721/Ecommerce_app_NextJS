@@ -24,7 +24,7 @@ export default function HeaderNavbar() {
   const element = document?.getElementById("scrollableDiv");
   const [searchDropbarOpen, setSearchDropbarOpen] = useState(false);
   const [user, setUser] = useState<FirebaseUser | null>(null);
-  const catMenu = useRef(null);
+  const catMenu = useRef<HTMLButtonElement | null>(null);
 
   useLayoutEffect(() => {
     const auth = getAuth();
@@ -51,7 +51,7 @@ export default function HeaderNavbar() {
 
   //close dropdown khi click ra ngoài
   const closeOpenMenus = (e: MouseEvent) => {
-    if (isDropdownOpen && !catMenu.current?.contains(e.target)) {
+    if (isDropdownOpen && !catMenu.current?.contains(e.target as Node)) {
       setIsDropdownOpen(false);
     }
   };
