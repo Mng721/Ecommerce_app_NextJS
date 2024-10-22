@@ -2,9 +2,10 @@
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
 import { sql } from "drizzle-orm";
-import { decimal, float } from "drizzle-orm/mysql-core";
 import {
   index,
+  integer,
+  numeric,
   pgTableCreator,
   serial,
   timestamp,
@@ -23,11 +24,16 @@ export const product = createTable(
   "post",
   {
     id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }).notNull() ,
+    name: varchar("name", { length: 256 }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    avatar: varchar("avatar", {length: 999}).notNull()
+    avatar: varchar("avatar", {length: 999}).notNull(),
+    price: numeric("price").notNull(),
+    salePrice: numeric("sale_price"),
+    sale: numeric("sale_percent"),
+    reviewCount: integer("review_count"),
+    rating: numeric("rating"),
   },
   (example) => ({
     nameIndex: index("name_idx").on(example.name),
