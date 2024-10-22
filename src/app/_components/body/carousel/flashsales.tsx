@@ -6,7 +6,6 @@ import { Button } from "~/components/ui/button"
 import ProductCard from '../../productcard'
 import { getAllProduct, getProductPaging } from '~/app/_service/product'
 import { Product } from '~/app/_interfaces/product'
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "~/components/ui/carousel"
 export default function FlashSalesCarousel() {
     const ITEM_LIMIT = 5;
     const [listProduct, setListProduct] = useState<Product[]>([]);
@@ -15,6 +14,18 @@ export default function FlashSalesCarousel() {
     const [emblaRef, emblaApi] = useEmblaCarousel({ slidesToScroll: 5, align: 'start', loop: false })
     const [countdown, setCountdown] = useState({ days: 70, hours: 15, minutes: 42, seconds: 5 })
     const [isLoading, setIsLoading] = useState(false)
+    const deadline = "December, 31, 2024";
+
+    const getTime = () => {
+        let time = Date.parse(deadline) - Date.now();
+        setCountdown({
+            days: Math.floor(time / (1000 * 60 * 60 * 24)),
+            hours: Math.floor((time / (1000 * 60 * 60)) % 24),
+            minutes: Math.floor((time / 1000 / 60) % 60),
+            seconds: Math.floor((time / 1000) % 60)
+        })
+    };
+
     const handleFetchPagingProduct = async (page: number) => {
         setIsLoading(true)
         try {
@@ -80,6 +91,7 @@ export default function FlashSalesCarousel() {
     }
     useLayoutEffect(() => {
         handleFetchPagingProduct(1);
+        getTime()
     }, []);
     useEffect(() => {
         const timer = setInterval(() => {
@@ -103,8 +115,12 @@ export default function FlashSalesCarousel() {
     }, [])
 
     return (
-        <div className="container w-full mx-auto px-4 flex flex-col justify-center">
-            <div className="container mx-auto flex flex-row justify-between">
+        <div className="container mx-auto px-4 flex flex-col justify-center">
+            <div className="content-title container mx-auto flex flex-row w-full pt-6 items-center">
+                <div className="border-box h-[40px] w-3 bg-red-600 rounded-sm"></div>
+                <div className="text pl-3 text-2xl text-red-600 font-semibold">Today's</div>
+            </div>
+            <div className="w-full flex flex-row justify-between">
                 <div className='flex flex-row items-center gap-8'>
                     <h2 className="text-4xl font-bold py-4">Flash Sales</h2>
                     <div className="flex space-x-4">
@@ -120,7 +136,7 @@ export default function FlashSalesCarousel() {
                     </div>
                 </div>
                 <div className="flex gap-2 items-center">
-                    <Button variant="outline" size="icon" onClick={handleGetPreviousPage}>
+                    <Button variant="outline" size="icon" onClick={handleGetPreviousPage} >
                         <ChevronLeft className="h-4 w-4" />
                     </Button>
                     <Button variant="outline" size="icon" onClick={handleGetNextPage}>

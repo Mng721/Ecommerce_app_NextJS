@@ -53,18 +53,18 @@ const ProductCard = (props: { sale?: number | string; newItem?: boolean; listCol
                   readOnly
                 />
               </div>
-              <div className="review-number ml-3 font-medium text-slate-500">({reviewCount})</div>
+              <div className="review-number ml-2 font-medium text-slate-500">({reviewCount})</div>
             </>
           )}
         </div>
       )}
       {!sale && (
         <div className="not-on-sale">
-          <div className="price-and-stars d-flex flex-row">
+          <div className="price-and-stars flex flex-row items-center gap-2">
             <div className="price">{price}$</div>
             {rating && (
               <>
-                <div className="review-star ml-1">
+                <div className="review-star ml-1 flex flex-row items-center">
                   <Rating
                     name="half-rating-read"
                     defaultValue={rating}
@@ -79,7 +79,7 @@ const ProductCard = (props: { sale?: number | string; newItem?: boolean; listCol
         </div>
       )}
       {listColor && (
-        <div className="d-flex flex-row gap-2 color-picker-container align-item-center min-h-4 p-0">
+        <div className="flex flex-row gap-2 color-picker-container items-center min-h-4 p-0">
           {listColor.map((color: any, index: number) => {
             return (
               <div
