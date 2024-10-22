@@ -25,7 +25,7 @@ const SearchDropDownContent = (props: { listSearchProduct: any; fetchMoreItem: a
                 >
                     {listSearchProduct.map((item: Product, index: number) => {
                         return (
-                            <div className="p-2 flex items-center justify-start flex-row hover:bg-slate-200">
+                            <div className="p-2 flex items-center justify-start flex-row hover:bg-slate-200" key={`item-${index}`}>
                                 <div>{item.name}</div>
                             </div>
                         );

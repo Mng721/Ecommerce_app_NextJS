@@ -9,11 +9,8 @@ import { Button } from '~/components/ui/button'
 import { searchProduct } from '~/app/_service/product'
 import { Product } from '~/app/_interfaces/product'
 import SearchDropDownContent from './searchdropdowncontent'
-import { getAuth, onAuthStateChanged, User as FirebaseUser, signOut } from 'firebase/auth'
-import { firebaseApp } from '~/app/_service/firebase'
-
+import { useSession, signOut } from 'next-auth/react'
 export default function HeaderNavbar() {
-  const auth = getAuth(firebaseApp);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [searchParam, setSearchParam] = useState("")
@@ -21,32 +18,18 @@ export default function HeaderNavbar() {
   const [debouncedValue] = useDebounce(searchParam, 500);
   const [listSearchProduct, setListSearchProduct] = useState<Product[]>([]);
   const [hasMore, setHasMore] = useState(true);
-  const element = document?.getElementById("scrollableDiv");
+  let element = null;
   const [searchDropbarOpen, setSearchDropbarOpen] = useState(false);
-  const [user, setUser] = useState<FirebaseUser | null>(null);
   const catMenu = useRef<HTMLButtonElement | null>(null);
+  const { data: session, status, update } = useSession()
 
-  useLayoutEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser)
-    });
-
-    return () => unsubscribe();
-  }, []);
   const fetchMoreItem = () => {
     setCurrentPage(currentPage + 1);
   };
 
   const handleLogout = () => {
-    setIsDropdownOpen(false)
-    signOut(auth)
-      .then(() => {
-        window.location.reload();
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    signOut({ callbackUrl: "/" })
+
   };
 
   //close dropdown khi click ra ngoài
@@ -55,7 +38,15 @@ export default function HeaderNavbar() {
       setIsDropdownOpen(false);
     }
   };
-  document.addEventListener("mousedown", closeOpenMenus);
+
+
+  if (typeof document !== 'undefined') {
+    // will run in client's browser only
+    element = document.getElementById("scrollableDiv");
+    document.addEventListener("mousedown", closeOpenMenus);
+
+  }
+
 
   //call khi có search value
   const handleSearch = async (searchValue: string, page: number) => {
@@ -100,9 +91,9 @@ export default function HeaderNavbar() {
           <h1 className="text-2xl font-bold">Exclusive</h1>
           <nav className="hidden md:flex space-x-4 md:grow md:justify-around md:px-1 xl:px-32">
             <Link href="/" className="text-foreground hover:text-primary hidden xl:block">Home</Link>
-            <Link href="/contact" className="text-foreground hover:text-primary">Contact</Link>
-            <Link href="/about" className="text-foreground hover:text-primary">About</Link>
-            {!user && <Link href="/login" className="text-foreground hover:text-primary">Log in</Link>}
+            <Link href="/" className="text-foreground hover:text-primary">Contact</Link>
+            <Link href="/" className="text-foreground hover:text-primary">About</Link>
+            {status === "unauthenticated" && <Link href="/login" className="text-foreground hover:text-primary">Log in</Link>}
           </nav>
           <div className="flex items-center space-x-4">
             <div className="hidden md:block relative">
@@ -146,10 +137,10 @@ export default function HeaderNavbar() {
                 <Card className="absolute right-0 mt-2 w-72 z-10 bg-black bg-opacity-40 backdrop-blur-sm" >
                   <CardContent className="p-2">
 
-                    {user && (
+                    {status === "authenticated" && (
                       <div className="">
                         <div className="px-4 py-2 text-white text-xl">
-                          Hello, <em>{user.displayName}</em>
+                          Hello, <em>{session.user?.name}</em>
                         </div>
                         <div className="w-[90%] border-t-[1px] border-white border-solid mx-auto"></div>
                       </div>
@@ -176,7 +167,7 @@ export default function HeaderNavbar() {
               <Link href="/" className="block text-foreground hover:text-primary max-w-xl m-auto">Home</Link>
               <Link href="/contact" className="block text-foreground hover:text-primary max-w-xl m-auto">Contact</Link>
               <Link href="/about" className="block text-foreground hover:text-primary max-w-xl m-auto">About</Link>
-              {!user && <Link href="/signup" className="block text-foreground hover:text-primary max-w-xl m-auto">Sign Up</Link>}
+              {status === "unauthenticated" && <Link href="/signup" className="block text-foreground hover:text-primary max-w-xl m-auto">Sign Up</Link>}
             </nav>
             <div className="px-4 py-2">
               <Input type="search" placeholder="What are you looking for?" className="w-full" value={searchParam}
