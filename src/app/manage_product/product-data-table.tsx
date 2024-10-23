@@ -45,12 +45,22 @@ export function DataTable<TData, TValue>({
     const [productImg, setProductImg] = useState("")
     const [productPrice, setProductPrice] = useState("")
     const [open, setOpen] = useState(false)
+    const [hasName, setHasName] = useState(true)
+    const [hasPrice, setHasPrice] = useState(true)
+    const [hasImg, setHasImg] = useState(true)
+
     const router = useRouter()
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0, //initial page index
         pageSize: 4, //default page size
     })
     const handleAddProduct = () => {
+        setHasName(true)
+        setHasPrice(true)
+        setHasImg(true)
+        if (!productName) { setHasName(false); return }
+        if (!productPrice) { setHasPrice(false); return }
+        if (!productImg) { setHasImg(false); return }
         addNewProduct(productName, productImg, productPrice);
         setProductImg("");
         setProductName("");
@@ -104,8 +114,8 @@ export function DataTable<TData, TValue>({
                                     value={productName}
                                     onChange={(event) => setProductName(event.target.value)}
                                     type="text"
-                                    required
                                 />
+                                {!hasName && <div className="text-red-600">Product name can't be empty</div>}
                             </div>
                             <div className="grid w-full items-center gap-1.5">
                                 <Label htmlFor="price" className="">
@@ -119,8 +129,8 @@ export function DataTable<TData, TValue>({
                                     step="any"
                                     onChange={(event) => { setProductPrice(event.target.value) }}
                                     className="col-span-3"
-                                    required
                                 />
+                                {!hasPrice && <div className="text-red-600">Product price can't be empty</div>}
                             </div>
 
                             <div className="grid w-full items-center gap-1.5">
@@ -137,8 +147,8 @@ export function DataTable<TData, TValue>({
                                         if (event.target.files[0] === null) return
                                         (setProductImg(URL.createObjectURL(event.target.files[0]!)))
                                     }}
-                                    required
                                 />
+                                {!hasImg && <div className="text-red-600">Product img can't be empty</div>}
                             </div>
 
                             <div className="flex justify-center items-center w-full border-gray-300 border-dashed border-[1px] rounded h-32">
@@ -147,7 +157,15 @@ export function DataTable<TData, TValue>({
                         </div>
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button type="button" variant="secondary" onClick={() => { setOpen(false), setProductImg(""), setProductName(""), setProductPrice("") }}>
+                                <Button type="button" variant="secondary" onClick={() => {
+                                    setHasName(true);
+                                    setHasPrice(true);
+                                    setHasImg(true);
+                                    setOpen(false);
+                                    setProductImg("");
+                                    setProductName("");
+                                    setProductPrice("")
+                                }}>
                                     Close
                                 </Button>
                             </DialogClose>

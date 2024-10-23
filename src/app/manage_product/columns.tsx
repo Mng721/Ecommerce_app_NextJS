@@ -62,12 +62,21 @@ export const columns: ColumnDef<Product>[] = [
             const [productName, setProductName] = useState("")
             const [productImg, setProductImg] = useState("")
             const [productPrice, setProductPrice] = useState("")
+            const [hasName, setHasName] = useState(true)
+            const [hasPrice, setHasPrice] = useState(true)
+            const [hasImg, setHasImg] = useState(true)
             const id: number = row.getValue("id")
             const name: string = row.getValue("name")
             const price: any = row.getValue("price")
             const avatar: any = row.getValue("avatar")
             const router = useRouter()
             const handleSaveChange = () => {
+                setHasName(true)
+                setHasPrice(true)
+                setHasImg(true)
+                if (!productName) { setHasName(false); return }
+                if (!productPrice) { setHasPrice(false); return }
+                if (!productImg) { setHasImg(false); return }
                 updateProduct(id, productName, productImg, productPrice)
                 router.refresh()
                 setOpen(false)
@@ -99,8 +108,9 @@ export const columns: ColumnDef<Product>[] = [
                                     value={productName}
                                     onChange={(event) => setProductName(event.target.value)}
                                     type="text"
-                                    required
                                 />
+                                {!hasName && <div className="text-red-600">Product name can't be empty</div>}
+
                             </div>
                             <div className="grid w-full items-center gap-1.5">
                                 <Label htmlFor="price" className="">
@@ -114,8 +124,9 @@ export const columns: ColumnDef<Product>[] = [
                                     step="any"
                                     onChange={(event) => { setProductPrice(event.target.value) }}
                                     className="col-span-3"
-                                    required
                                 />
+                                {!hasPrice && <div className="text-red-600">Product price can't be empty</div>}
+
                             </div>
 
                             <div className="grid w-full items-center gap-1.5">
@@ -132,8 +143,9 @@ export const columns: ColumnDef<Product>[] = [
                                         if (event.target.files[0] === null) return
                                         (setProductImg(URL.createObjectURL(event.target.files[0]!)))
                                     }}
-                                    required
                                 />
+                                {!hasImg && <div className="text-red-600">Product img can't be empty</div>}
+
                             </div>
 
                             <div className="flex justify-center items-center w-full border-gray-300 border-dashed border-[1px] rounded h-32">
@@ -142,7 +154,12 @@ export const columns: ColumnDef<Product>[] = [
                         </div>
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button type="button" variant="secondary" onClick={() => { setOpen(false) }}>
+                                <Button type="button" variant="secondary" onClick={() => {
+                                    setHasName(true);
+                                    setHasPrice(true);
+                                    setHasImg(true);
+                                    setOpen(false)
+                                }}>
                                     Close
                                 </Button>
                             </DialogClose>

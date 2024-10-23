@@ -93,7 +93,7 @@ export default function HeaderNavbar() {
             <Link href="/" className="text-foreground hover:text-primary hidden xl:block">Home</Link>
             <Link href="/" className="text-foreground hover:text-primary">Contact</Link>
             <Link href="/" className="text-foreground hover:text-primary">About</Link>
-            {status === "unauthenticated" && <Link href="/login" className="text-foreground hover:text-primary">Log in</Link>}
+            {status === "unauthenticated" ? <Link href="/login" className="text-foreground hover:text-primary">Log in</Link> : <Link href="/manage_product" className="text-foreground hover:text-primary">Manage product</Link>}
           </nav>
           <div className="flex items-center space-x-4">
             <div className="hidden md:block relative">
