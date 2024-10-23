@@ -11,7 +11,7 @@ import {
     SortingState,
     useReactTable,
 } from "@tanstack/react-table"
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
 
@@ -36,7 +36,10 @@ export function DataTable<TData, TValue>({
     columns,
     data,
 }: DataTableProps<TData, TValue>) {
-    const [sorting, setSorting] = useState<SortingState>([])
+    const [sorting, setSorting] = useState<SortingState>([{
+        id: "id",
+        desc: false,
+    }])
     const [productName, setProductName] = useState("")
     const [productImg, setProductImg] = useState("")
     const [productPrice, setProductPrice] = useState("")
@@ -47,6 +50,9 @@ export function DataTable<TData, TValue>({
     })
     const handleAddProduct = () => {
         addNewProduct(productName, productImg, productPrice);
+        setProductImg("");
+        setProductName("");
+        setProductPrice("");
         setOpen(false);
     }
     const table = useReactTable({
@@ -123,7 +129,11 @@ export function DataTable<TData, TValue>({
                                     className="col-span-3"
                                     type="file"
                                     accept="image/*"
-                                    onChange={(event) => (setProductImg(URL.createObjectURL(event.target.files[0])))}
+                                    onChange={(event) => {
+                                        if (event.target.files === null) return
+                                        if (event.target.files[0] === null) return
+                                        (setProductImg(URL.createObjectURL(event.target.files[0]!)))
+                                    }}
                                     required
                                 />
                             </div>

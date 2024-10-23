@@ -124,7 +124,11 @@ export const columns: ColumnDef<Product>[] = [
                                     className="col-span-3"
                                     type="file"
                                     accept="image/*"
-                                    onChange={(event) => (setProductImg(URL.createObjectURL(event.target.files[0])))}
+                                    onChange={(event) => {
+                                        if (event.target.files === null) return
+                                        if (event.target.files[0] === null) return
+                                        (setProductImg(URL.createObjectURL(event.target.files[0]!)))
+                                    }}
                                     required
                                 />
                             </div>
@@ -135,7 +139,7 @@ export const columns: ColumnDef<Product>[] = [
                         </div>
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button type="button" variant="secondary" onClick={() => { setOpen(false), setProductImg(""), setProductName(""), setProductPrice("") }}>
+                                <Button type="button" variant="secondary" onClick={() => { setOpen(false) }}>
                                     Close
                                 </Button>
                             </DialogClose>
