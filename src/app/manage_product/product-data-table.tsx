@@ -26,6 +26,7 @@ import {
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog"
 import { Label } from "~/components/ui/label"
 import { addNewProduct } from "./action"
+import { useRouter } from "next/navigation"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -44,6 +45,7 @@ export function DataTable<TData, TValue>({
     const [productImg, setProductImg] = useState("")
     const [productPrice, setProductPrice] = useState("")
     const [open, setOpen] = useState(false)
+    const router = useRouter()
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0, //initial page index
         pageSize: 4, //default page size
@@ -54,6 +56,7 @@ export function DataTable<TData, TValue>({
         setProductName("");
         setProductPrice("");
         setOpen(false);
+        router.refresh()
     }
     const table = useReactTable({
         data,

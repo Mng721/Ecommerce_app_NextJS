@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog"
 import { Label } from "~/components/ui/label"
 import { Input } from "~/components/ui/input"
+import { useRouter } from "next/navigation"
 export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: "id",
@@ -65,8 +66,10 @@ export const columns: ColumnDef<Product>[] = [
             const name: string = row.getValue("name")
             const price: any = row.getValue("price")
             const avatar: any = row.getValue("avatar")
+            const router = useRouter()
             const handleSaveChange = () => {
                 updateProduct(id, productName, productImg, productPrice)
+                router.refresh()
                 setOpen(false)
             }
             useEffect(() => {
@@ -147,7 +150,10 @@ export const columns: ColumnDef<Product>[] = [
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
-                <Button variant={"destructive"} onClick={() => { removeProduct(row.getValue("id")) }}>Remove</Button>
+                <Button variant={"destructive"} onClick={() => {
+                    removeProduct(row.getValue("id"));
+                    router.refresh()
+                }}>Remove</Button>
             </div>)
         }
     },
