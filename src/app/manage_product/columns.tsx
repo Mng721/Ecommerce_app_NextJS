@@ -4,7 +4,11 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Product } from "../_interfaces/product"
 import { Button } from "~/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
-
+import { removeProduct, updateProduct } from "./action"
+import { useEffect, useState } from "react"
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog"
+import { Label } from "~/components/ui/label"
+import { Input } from "~/components/ui/input"
 export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: "id",
@@ -52,9 +56,95 @@ export const columns: ColumnDef<Product>[] = [
     },
     {
         header: "Function",
-        cell: ({ row }) => (<div className="flex gap-2">
-            <Button variant={"outline"}>Update</Button>
-            <Button variant={"destructive"}>Remove</Button>
-        </div>)
+        cell: ({ row }) => {
+            const [open, setOpen] = useState(false);
+            const [productName, setProductName] = useState("")
+            const [productImg, setProductImg] = useState("")
+            const [productPrice, setProductPrice] = useState("")
+            const id: number = row.getValue("id")
+            const name: string = row.getValue("name")
+            const price: any = row.getValue("price")
+            const avatar: any = row.getValue("avatar")
+            const handleSaveChange = () => {
+                updateProduct(id, productName, productImg, productPrice)
+                setOpen(false)
+            }
+            useEffect(() => {
+                setProductName(name);
+                setProductPrice(price);
+                setProductImg(avatar);
+            }, [])
+            return (<div className="flex gap-2">
+                <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogTrigger asChild>
+                        <Button variant={"outline"} onClick={() => { setOpen(true) }}>Update</Button>
+
+                    </DialogTrigger>
+                    <DialogContent className="">
+                        <DialogHeader>
+                            <DialogTitle>Update product</DialogTitle>
+                        </DialogHeader>
+
+                        <div className="grid gap-4 pb-4">
+                            <div className="grid w-full items-center gap-1.5">
+                                <Label htmlFor="name" className="">
+                                    Product name
+                                </Label>
+                                <Input
+                                    id="name"
+                                    className="col-span-3"
+                                    value={productName}
+                                    onChange={(event) => setProductName(event.target.value)}
+                                    type="text"
+                                    required
+                                />
+                            </div>
+                            <div className="grid w-full items-center gap-1.5">
+                                <Label htmlFor="price" className="">
+                                    Price
+                                </Label>
+                                <Input
+                                    id="price"
+                                    value={productPrice}
+                                    type="number"
+                                    min="0"
+                                    step="any"
+                                    onChange={(event) => { setProductPrice(event.target.value) }}
+                                    className="col-span-3"
+                                    required
+                                />
+                            </div>
+
+                            <div className="grid w-full items-center gap-1.5">
+                                <Label htmlFor="product-img" className="">
+                                    Product Image
+                                </Label>
+                                <Input
+                                    id="product-img"
+                                    className="col-span-3"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(event) => (setProductImg(URL.createObjectURL(event.target.files[0])))}
+                                    required
+                                />
+                            </div>
+
+                            <div className="flex justify-center items-center w-full border-gray-300 border-dashed border-[1px] rounded h-32">
+                                {productImg ? <img src={productImg} alt="product-img-preview" className="h-full w-auto object-contain" /> : <i className="text-gray-300">Product preview</i>}
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <Button type="button" variant="secondary" onClick={() => { setOpen(false), setProductImg(""), setProductName(""), setProductPrice("") }}>
+                                    Close
+                                </Button>
+                            </DialogClose>
+                            <Button type="submit" onClick={handleSaveChange}>Save changes</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+                <Button variant={"destructive"} onClick={() => { removeProduct(row.getValue("id")) }}>Remove</Button>
+            </div>)
+        }
     },
 ]

@@ -7,13 +7,13 @@ import {
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
+    PaginationState,
     SortingState,
     useReactTable,
 } from "@tanstack/react-table"
 import { useRef, useState } from "react"
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
-import { db } from '~/server/db'
 
 import {
     Table,
@@ -23,10 +23,9 @@ import {
     TableHeader,
     TableRow,
 } from "~/components/ui/table"
-import { product } from "~/server/db/schema"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from "~/components/ui/dialog"
-import { DialogTitle } from "@mui/material"
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog"
 import { Label } from "~/components/ui/label"
+import { addNewProduct } from "./action"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -41,9 +40,14 @@ export function DataTable<TData, TValue>({
     const [productName, setProductName] = useState("")
     const [productImg, setProductImg] = useState("")
     const [productPrice, setProductPrice] = useState("")
-
-    const handleAddProduct = async () => {
-        await db.insert(product).values({ name: productName, avatar: productImg, price: productPrice })
+    const [open, setOpen] = useState(false)
+    const [pagination, setPagination] = useState<PaginationState>({
+        pageIndex: 0, //initial page index
+        pageSize: 4, //default page size
+    })
+    const handleAddProduct = () => {
+        addNewProduct(productName, productImg, productPrice);
+        setOpen(false);
     }
     const table = useReactTable({
         data,
@@ -53,8 +57,9 @@ export function DataTable<TData, TValue>({
         getSortedRowModel: getSortedRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-
+        onPaginationChange: setPagination,
         state: {
+            pagination,
             sorting,
         }
     })
@@ -70,14 +75,13 @@ export function DataTable<TData, TValue>({
                     }
                     className="max-w-sm"
                 />
-                <Dialog>
+                <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger asChild>
-                        <Button variant={"default"}>Add products</Button>
+                        <Button variant={"default"} onClick={() => setOpen(true)}>Add products</Button>
                     </DialogTrigger>
                     <DialogContent className="">
                         <DialogHeader>
                             <DialogTitle>Add product</DialogTitle>
-
                         </DialogHeader>
 
                         <div className="grid gap-4 pb-4">
@@ -129,10 +133,14 @@ export function DataTable<TData, TValue>({
                             </div>
                         </div>
                         <DialogFooter>
+                            <DialogClose asChild>
+                                <Button type="button" variant="secondary" onClick={() => { setOpen(false), setProductImg(""), setProductName(""), setProductPrice("") }}>
+                                    Close
+                                </Button>
+                            </DialogClose>
                             <Button type="submit" onClick={handleAddProduct}>Save changes</Button>
                         </DialogFooter>
                     </DialogContent>
-
                 </Dialog>
 
             </div>
@@ -160,7 +168,7 @@ export function DataTable<TData, TValue>({
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <TableRow
+                                <TableRow className="hover:bg-gray-100"
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
                                 >
@@ -195,7 +203,7 @@ export function DataTable<TData, TValue>({
                 <Button
                     variant="outline"
                     size="default"
-                    onClick={() => table.nextPage()}
+                    onClick={() => { table.nextPage() }}
                     disabled={!table.getCanNextPage()}
                 >
                     Next
