@@ -1,18 +1,14 @@
-import { redirect } from 'next/navigation'
-import React from 'react'
-import { db } from '~/server/db'
-import ProductCard from '../_components/productcard'
 
+import React, { useEffect, useState } from 'react'
+import { db } from '~/server/db'
+import { DataTable } from './product-data-table'
+import { columns } from './columns'
 const page = async () => {
     const products = await db.query.product.findMany()
+
     return (
-        <div>
-            this is manage product page
-            {products.map((item) => {
-                return <div key={item.id}>
-                    <ProductCard price={item.price} imgSrc={item.avatar} name={item.name} rating={item.rating} />
-                </div>
-            })}
+        <div className='container mx-auto'>
+            <DataTable columns={columns} data={products} />
         </div>
     )
 }

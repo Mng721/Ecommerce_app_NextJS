@@ -4,14 +4,14 @@ import { Rating } from "@mui/material";
 import { MdFavoriteBorder } from "react-icons/md";
 import { IoEyeOutline } from "react-icons/io5";
 import { useState } from "react";
-const ProductCard = (props: { sale?: number | string; newItem?: boolean; listColor?: any; rating?: any; price: number | string; salePrice?: number | string; reviewCount?: number | undefined; name: string | undefined; imgSrc?: any; }) => {
+const ProductCard = (props: { sale?: number | string; newItem?: boolean; listColor?: any; rating?: any; price: number | string; salePrice?: number | string; reviewCount?: number | null; name: string | undefined; imgSrc?: any; }) => {
   const { sale,
     newItem,
     listColor,
     rating,
     price = "160",
     salePrice = "120",
-    reviewCount = 55,
+    reviewCount,
     name = "HAVIT HV-G92 Gamepad",
     imgSrc } = props
   const [colorPicked, setColorPicked] = useState(listColor ? listColor[0] : "");

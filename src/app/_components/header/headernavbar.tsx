@@ -146,7 +146,7 @@ export default function HeaderNavbar() {
                       </div>
                     )}
                     <nav className="space-y-2" ref={catMenu}>
-                      <Link href="/account" className="block px-4 py-2 hover:bg-slate-700 rounded-md text-white text-l">Manage My Account</Link>
+                      <Link href="/account" className="block px-4 py-2 hover:bg-slate-700 rounded-md text-white text-l mt-1">Manage My Account</Link>
                       <Link href="/orders" className="block px-4 py-2 hover:bg-slate-700 rounded-md text-white text-l">My Order</Link>
                       <Link href="/cancellations" className="block px-4 py-2 hover:bg-slate-700 rounded-md text-white text-l">My Cancellations</Link>
                       <Link href="/reviews" className="block px-4 py-2 hover:bg-slate-700 rounded-md text-white text-l">My Reviews</Link>
