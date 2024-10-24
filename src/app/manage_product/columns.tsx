@@ -34,6 +34,7 @@ export const columns: ColumnDef<Product>[] = [
                 </Button>
             )
         },
+        cell: ({ row }) => { return <div className="text-ellipsis overflow-hidden ">{row.getValue("name")}</div> }
     },
     {
         accessorKey: "price",
@@ -57,7 +58,8 @@ export const columns: ColumnDef<Product>[] = [
         header: "Rating",
     },
     {
-        header: "Function",
+        id: "function",
+        header: () => { return <div className="flex flex-row justify-end">Function</div> },
         cell: ({ row }) => {
             const [open, setOpen] = useState(false);
             const [productName, setProductName] = useState("")
@@ -116,7 +118,7 @@ export const columns: ColumnDef<Product>[] = [
                 setProductPrice(price);
                 setPreviewImg(avatar);
             }, [open])
-            return (<div className="flex gap-2">
+            return (<div className="flex gap-2 justify-end">
                 <Dialog open={open} onOpenChange={() => {
                     setOpen(!open)
                     setHasName(true);
