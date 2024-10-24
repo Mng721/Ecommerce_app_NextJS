@@ -114,7 +114,7 @@ export const columns: ColumnDef<Product>[] = [
                 setProductName(name);
                 setProductPrice(price);
                 setPreviewImg(avatar);
-            }, [])
+            }, [open])
             return (<div className="flex gap-2">
                 <Dialog open={open} onOpenChange={() => {
                     setOpen(!open)

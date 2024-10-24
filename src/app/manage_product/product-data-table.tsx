@@ -184,7 +184,6 @@ export function DataTable<TData, TValue>({
                                         if (event.target.files[0] === null) return
                                         setPreviewImg(URL.createObjectURL(event.target.files[0]!))
                                         setFile(event.target.files[0])
-                                        console.log(event.target.files[0])
                                     }}
                                 />
                                 {hasImg && <div className="text-red-600">{hasImg}</div>}

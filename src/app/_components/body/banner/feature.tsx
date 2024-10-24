@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 import { images } from '~/app/_assets/image'
 
@@ -10,9 +11,14 @@ const FeatureNewArrival = () => {
                 <div className="text pl-3 text-2xl text-red-600 font-semibold">Today's</div>
             </div>
             <h2 className="text-4xl font-bold py-4">Flash Sales</h2>
-            <div className='grid grid-cols-4 gap-4 grid-rows-2 h-[70vh]'>
+            <div className='grid md:grid-cols-4 grid-col-2 gap-4 md:grid-rows-2 grid-row-4 h-[120vh] md:h-[70vh]'>
                 <div className='row-span-2 col-span-2 bg-black relative'>
-                    <Image src={images.ps5Img} alt='ps5-image' className='absolute h-auto bottom-0 left-[10%] right-[10%] z-0 w-[80%]' />
+                    <div className='absolute bottom-[5%] left-[5%] z-20'>
+                        <h1 className='text-white'>PlayStation 5</h1>
+                        <p className='text-white'>Black and White version of the PS5 coming out on sale</p>.
+                        <Link href={""} className='text-white underline'>Shop Now</Link>
+                    </div>
+                    <Image src={images.ps5Img} alt='ps5-image' className='absolute max-h-full h-auto bottom-0 left-[10%] right-[10%] z-0 w-[80%]' />
                 </div>
                 <div className='row-span-1 col-span-2 bg-black relative'>
                     <Image src={images.womanCollectionsImg} alt='woman-collection-img' className='absolute h-full w-auto bottom-0 top-0 right-0 z-0 max-w-full' />

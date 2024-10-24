@@ -93,7 +93,7 @@ export default function HeaderNavbar() {
             <Link href="/" className="text-foreground hover:text-primary hidden xl:block">Home</Link>
             <Link href="/" className="text-foreground hover:text-primary">Contact</Link>
             <Link href="/" className="text-foreground hover:text-primary">About</Link>
-            {status === "unauthenticated" ? <Link href="/login" className="text-foreground hover:text-primary">Log in</Link> : <Link href="/manage_product" className="text-foreground hover:text-primary">Manage product</Link>}
+            {status === "unauthenticated" ? <Link href="/login" className="text-foreground hover:text-primary">Log in</Link> : <Link href="/manage_product" className="text-foreground hover:text-primary">Manage products</Link>}
           </nav>
           <div className="flex items-center space-x-4">
             <div className="hidden md:block relative">
@@ -167,7 +167,7 @@ export default function HeaderNavbar() {
               <Link href="/" className="block text-foreground hover:text-primary max-w-xl m-auto">Home</Link>
               <Link href="/contact" className="block text-foreground hover:text-primary max-w-xl m-auto">Contact</Link>
               <Link href="/about" className="block text-foreground hover:text-primary max-w-xl m-auto">About</Link>
-              {status === "unauthenticated" && <Link href="/signup" className="block text-foreground hover:text-primary max-w-xl m-auto">Sign Up</Link>}
+              {status === "unauthenticated" ? <Link href="/signup" className="block text-foreground hover:text-primary max-w-xl m-auto">Sign Up</Link> : <Link href="/manage_product" className="block text-foreground hover:text-primary max-w-xl m-auto">Manage products</Link>}
             </nav>
             <div className="px-4 py-2">
               <Input type="search" placeholder="What are you looking for?" className="w-full" value={searchParam}
