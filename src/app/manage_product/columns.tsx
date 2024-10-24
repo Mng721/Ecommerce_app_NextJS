@@ -10,6 +10,7 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import { Label } from "~/components/ui/label"
 import { Input } from "~/components/ui/input"
 import { useRouter } from "next/navigation"
+import axios from "axios"
 export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: "id",
@@ -60,34 +61,67 @@ export const columns: ColumnDef<Product>[] = [
         cell: ({ row }) => {
             const [open, setOpen] = useState(false);
             const [productName, setProductName] = useState("")
-            const [productImg, setProductImg] = useState("")
+            const [previewImg, setPreviewImg] = useState("")
             const [productPrice, setProductPrice] = useState("")
             const [hasName, setHasName] = useState(true)
             const [hasPrice, setHasPrice] = useState(true)
-            const [hasImg, setHasImg] = useState(true)
+            const [hasImg, setHasImg] = useState("")
+            const [file, setFile] = useState<any>(null)
             const id: number = row.getValue("id")
             const name: string = row.getValue("name")
             const price: any = row.getValue("price")
             const avatar: any = row.getValue("avatar")
             const router = useRouter()
-            const handleSaveChange = () => {
+            const handleSaveChange = async (event: any) => {
                 setHasName(true)
                 setHasPrice(true)
-                setHasImg(true)
+                setHasImg("")
                 if (!productName) { setHasName(false); return }
                 if (!productPrice) { setHasPrice(false); return }
-                if (!productImg) { setHasImg(false); return }
-                updateProduct(id, productName, productImg, productPrice)
+                if (!previewImg) { setHasImg("Product img can't be empty"); return }
+                if (file) {
+                    var image = new Image();
+                    image.onload = function () {
+                        setHasImg("")
+                    };
+                    image.onerror = function () {
+                        setHasImg('Invalid image');
+                        return
+                    };
+                    image.src = previewImg;
+                }
+                event.preventDefault();
+
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', 'product_img');
+                try {
+                    const response = await axios.post(
+                        "https://api.cloudinary.com/v1_1/dtwie44qs/image/upload",
+                        formData
+                    );
+                    console.log(response)
+                    let productImgUrl = `https://res.cloudinary.com/dtwie44qs/image/upload/v${response.data.version}/${response.data.public_id}.png`
+                    updateProduct(id, productName, productImgUrl, productPrice);
+
+                } catch (error) {
+                    console.error(error);
+                }
                 router.refresh()
                 setOpen(false)
             }
             useEffect(() => {
                 setProductName(name);
                 setProductPrice(price);
-                setProductImg(avatar);
+                setPreviewImg(avatar);
             }, [])
             return (<div className="flex gap-2">
-                <Dialog open={open} onOpenChange={setOpen}>
+                <Dialog open={open} onOpenChange={() => {
+                    setOpen(!open)
+                    setHasName(true);
+                    setHasPrice(true);
+                    setHasImg("");
+                }}>
                     <DialogTrigger asChild>
                         <Button variant={"outline"} onClick={() => { setOpen(true) }}>Update</Button>
 
@@ -141,23 +175,21 @@ export const columns: ColumnDef<Product>[] = [
                                     onChange={(event) => {
                                         if (event.target.files === null) return
                                         if (event.target.files[0] === null) return
-                                        (setProductImg(URL.createObjectURL(event.target.files[0]!)))
+                                        setPreviewImg(URL.createObjectURL(event.target.files[0]!))
+                                        setFile(event.target.files[0])
                                     }}
                                 />
-                                {!hasImg && <div className="text-red-600">Product img can't be empty</div>}
+                                {hasImg && <div className="text-red-600">{hasImg}</div>}
 
                             </div>
 
                             <div className="flex justify-center items-center w-full border-gray-300 border-dashed border-[1px] rounded h-32">
-                                {productImg ? <img src={productImg} alt="product-img-preview" className="h-full w-auto object-contain" /> : <i className="text-gray-300">Product preview</i>}
+                                {previewImg ? <img src={previewImg} alt="product-img-preview" className="h-full w-auto object-contain" /> : <i className="text-gray-300">Product preview</i>}
                             </div>
                         </div>
                         <DialogFooter>
                             <DialogClose asChild>
                                 <Button type="button" variant="secondary" onClick={() => {
-                                    setHasName(true);
-                                    setHasPrice(true);
-                                    setHasImg(true);
                                     setOpen(false)
                                 }}>
                                     Close
