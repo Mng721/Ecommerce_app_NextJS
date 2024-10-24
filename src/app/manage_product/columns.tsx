@@ -89,23 +89,25 @@ export const columns: ColumnDef<Product>[] = [
                         return
                     };
                     image.src = previewImg;
-                }
-                event.preventDefault();
+                    event.preventDefault();
 
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('upload_preset', 'product_img');
-                try {
-                    const response = await axios.post(
-                        "https://api.cloudinary.com/v1_1/dtwie44qs/image/upload",
-                        formData
-                    );
-                    console.log(response)
-                    let productImgUrl = `https://res.cloudinary.com/dtwie44qs/image/upload/v${response.data.version}/${response.data.public_id}.png`
-                    updateProduct(id, productName, productImgUrl, productPrice);
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', 'product_img');
+                    try {
+                        const response = await axios.post(
+                            "https://api.cloudinary.com/v1_1/dtwie44qs/image/upload",
+                            formData
+                        );
+                        console.log(response)
+                        let productImgUrl = `https://res.cloudinary.com/dtwie44qs/image/upload/v${response.data.version}/${response.data.public_id}.png`
+                        updateProduct(id, productName, productImgUrl, productPrice);
 
-                } catch (error) {
-                    console.error(error);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                } else {
+                    updateProduct(id, productName, previewImg, productPrice)
                 }
                 router.refresh()
                 setOpen(false)
