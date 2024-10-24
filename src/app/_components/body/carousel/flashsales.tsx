@@ -123,7 +123,7 @@ export default function FlashSalesCarousel() {
             <div className="w-full flex flex-row justify-between">
                 <div className='flex flex-row items-center gap-8'>
                     <h2 className="text-4xl font-bold py-4">Flash Sales</h2>
-                    <div className="flex space-x-4">
+                    <div className="md:flex space-x-4 hidden">
                         {Object.entries(countdown).map(([unit, value], index, array) => (
                             <React.Fragment key={unit}>
                                 <div className="text-center">
