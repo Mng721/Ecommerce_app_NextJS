@@ -19,7 +19,7 @@ export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: "avatar",
         header: "Image",
-        cell: ({ row }) => (<img src={row.getValue("avatar")} alt={row.getValue("name")} className="size-28 object-none" />)
+        cell: ({ row }) => (<img src={row.getValue("avatar")} alt={row.getValue("name")} className="size-28 object-cover" />)
     },
     {
         accessorKey: "name",
@@ -99,7 +99,6 @@ export const columns: ColumnDef<Product>[] = [
                             "https://api.cloudinary.com/v1_1/dtwie44qs/image/upload",
                             formData
                         );
-                        console.log(response)
                         let productImgUrl = `https://res.cloudinary.com/dtwie44qs/image/upload/v${response.data.version}/${response.data.public_id}.png`
                         updateProduct(id, productName, productImgUrl, productPrice);
 

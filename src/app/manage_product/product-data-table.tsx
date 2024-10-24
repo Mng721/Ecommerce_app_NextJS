@@ -83,10 +83,8 @@ export function DataTable<TData, TValue>({
                 "https://api.cloudinary.com/v1_1/dtwie44qs/image/upload",
                 formData
             );
-            console.log(response)
             let productImgUrl = `https://res.cloudinary.com/dtwie44qs/image/upload/v${response.data.version}/${response.data.public_id}.png`
             addNewProduct(productName, productImgUrl, productPrice);
-
         } catch (error) {
             console.error(error);
         }
