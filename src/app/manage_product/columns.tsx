@@ -19,7 +19,7 @@ export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: "avatar",
         header: "Image",
-        cell: ({ row }) => (<img src={row.getValue("avatar")} alt={row.getValue("name")} className="size-28" />)
+        cell: ({ row }) => (<img src={row.getValue("avatar")} alt={row.getValue("name")} className="size-28 object-none" />)
     },
     {
         accessorKey: "name",

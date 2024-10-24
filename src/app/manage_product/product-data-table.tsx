@@ -254,7 +254,7 @@ export function DataTable<TData, TValue>({
 
             </div>
 
-            <div className="space-x-2 mx-auto">
+            <div className="space-x-2 mx-auto my-2">
                 <Button
                     variant="outline"
                     size="default"
