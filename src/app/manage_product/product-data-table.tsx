@@ -28,6 +28,7 @@ import { Label } from "~/components/ui/label"
 import { useRouter } from "next/navigation"
 import axios from "axios"
 import { addNewProduct } from "./action"
+import { ProductSchema } from "./util"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -43,12 +44,12 @@ export function DataTable<TData, TValue>({
         desc: false,
     }])
     const [productName, setProductName] = useState("")
-    const [productPrice, setProductPrice] = useState("")
+    const [productPrice, setProductPrice] = useState<any>("")
     const [previewImg, setPreviewImg] = useState("")
     const [open, setOpen] = useState(false)
-    const [hasName, setHasName] = useState(true)
-    const [hasPrice, setHasPrice] = useState(true)
-    const [hasImg, setHasImg] = useState("")
+    const [hasName, setHasName] = useState<any>("")
+    const [hasPrice, setHasPrice] = useState<any>("")
+    const [hasImg, setHasImg] = useState<any>("")
     const [file, setFile] = useState<any>(null)
     const router = useRouter()
     const [pagination, setPagination] = useState<PaginationState>({
@@ -56,12 +57,22 @@ export function DataTable<TData, TValue>({
         pageSize: 4, //default page size
     })
     const handleAddProduct = async (event: any) => {
-        setHasName(true)
-        setHasPrice(true)
+        setHasName("")
+        setHasPrice("")
         setHasImg("")
-        if (!productName) { setHasName(false); return }
-        if (!productPrice) { setHasPrice(false); return }
-        if (!previewImg) { setHasImg("Product img can't be empty"); return }
+        const newProduct = {
+            name: productName,
+            price: productPrice,
+            avatar: previewImg
+        }
+        const validation = ProductSchema.safeParse(newProduct)
+        if (!validation.success) {
+            const formattedErrors = validation.error.format()
+            setHasName(formattedErrors.name?._errors)
+            setHasPrice(formattedErrors.price?._errors)
+            setHasImg(formattedErrors.avatar?._errors)
+            return
+        }
         if (file) {
             var image = new Image();
             image.onload = function () {
@@ -123,8 +134,8 @@ export function DataTable<TData, TValue>({
                 />
                 <Dialog open={open} onOpenChange={() => {
                     setOpen(!open)
-                    setHasName(true);
-                    setHasPrice(true);
+                    setHasName("");
+                    setHasPrice("");
                     setHasImg("");
                     setPreviewImg("");
                     setProductName("");
@@ -133,9 +144,9 @@ export function DataTable<TData, TValue>({
                     <DialogTrigger asChild>
                         <Button variant={"default"} onClick={() => setOpen(true)}>Add products</Button>
                     </DialogTrigger>
-                    <DialogContent className="">
+                    <DialogContent className="" aria-describedby={undefined}>
                         <DialogHeader>
-                            <DialogTitle>Add product</DialogTitle>
+                            <DialogTitle >Add product</DialogTitle>
                         </DialogHeader>
 
                         <div className="grid gap-4 pb-4">
@@ -150,7 +161,7 @@ export function DataTable<TData, TValue>({
                                     onChange={(event) => setProductName(event.target.value)}
                                     type="text"
                                 />
-                                {!hasName && <div className="text-red-600">Product name can't be empty</div>}
+                                {hasName && <div className="text-red-600">{hasName}</div>}
                             </div>
                             <div className="grid w-full items-center gap-1.5">
                                 <Label htmlFor="price" className="">
@@ -162,10 +173,10 @@ export function DataTable<TData, TValue>({
                                     type="number"
                                     min="0"
                                     step="any"
-                                    onChange={(event) => { setProductPrice(event.target.value) }}
+                                    onChange={(event) => { setProductPrice(+event.target.value) }}
                                     className="col-span-3"
                                 />
-                                {!hasPrice && <div className="text-red-600">Product price can't be empty</div>}
+                                {hasPrice && <div className="text-red-600">{hasPrice}</div>}
                             </div>
 
                             <div className="grid w-full items-center gap-1.5">

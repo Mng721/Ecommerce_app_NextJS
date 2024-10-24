@@ -11,6 +11,7 @@ import { Label } from "~/components/ui/label"
 import { Input } from "~/components/ui/input"
 import { useRouter } from "next/navigation"
 import axios from "axios"
+import { ProductSchema } from "./util"
 export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: "id",
@@ -64,10 +65,10 @@ export const columns: ColumnDef<Product>[] = [
             const [open, setOpen] = useState(false);
             const [productName, setProductName] = useState("")
             const [previewImg, setPreviewImg] = useState("")
-            const [productPrice, setProductPrice] = useState("")
-            const [hasName, setHasName] = useState(true)
-            const [hasPrice, setHasPrice] = useState(true)
-            const [hasImg, setHasImg] = useState("")
+            const [productPrice, setProductPrice] = useState<any>("")
+            const [hasName, setHasName] = useState<any>("")
+            const [hasPrice, setHasPrice] = useState<any>("")
+            const [hasImg, setHasImg] = useState<any>("")
             const [file, setFile] = useState<any>(null)
             const id: number = row.getValue("id")
             const name: string = row.getValue("name")
@@ -75,12 +76,22 @@ export const columns: ColumnDef<Product>[] = [
             const avatar: any = row.getValue("avatar")
             const router = useRouter()
             const handleSaveChange = async (event: any) => {
-                setHasName(true)
-                setHasPrice(true)
+                setHasName("")
+                setHasPrice("")
                 setHasImg("")
-                if (!productName) { setHasName(false); return }
-                if (!productPrice) { setHasPrice(false); return }
-                if (!previewImg) { setHasImg("Product img can't be empty"); return }
+                const newProduct = {
+                    name: productName,
+                    price: productPrice,
+                    avatar: previewImg
+                }
+                const validation = ProductSchema.safeParse(newProduct)
+                if (!validation.success) {
+                    const formattedErrors = validation.error.format()
+                    setHasName(formattedErrors.name?._errors)
+                    setHasPrice(formattedErrors.price?._errors)
+                    setHasImg(formattedErrors.avatar?._errors)
+                    return
+                }
                 if (file) {
                     var image = new Image();
                     image.onload = function () {
@@ -115,23 +126,23 @@ export const columns: ColumnDef<Product>[] = [
             }
             useEffect(() => {
                 setProductName(name);
-                setProductPrice(price);
+                setProductPrice(+price);
                 setPreviewImg(avatar);
             }, [open])
             return (<div className="flex gap-2 justify-end">
                 <Dialog open={open} onOpenChange={() => {
                     setOpen(!open)
-                    setHasName(true);
-                    setHasPrice(true);
+                    setHasName("");
+                    setHasPrice("");
                     setHasImg("");
                 }}>
                     <DialogTrigger asChild>
                         <Button variant={"outline"} onClick={() => { setOpen(true) }}>Update</Button>
 
                     </DialogTrigger>
-                    <DialogContent className="">
+                    <DialogContent className="" aria-describedby={undefined}>
                         <DialogHeader>
-                            <DialogTitle>Update product</DialogTitle>
+                            <DialogTitle >Update product</DialogTitle>
                         </DialogHeader>
 
                         <div className="grid gap-4 pb-4">
@@ -146,7 +157,7 @@ export const columns: ColumnDef<Product>[] = [
                                     onChange={(event) => setProductName(event.target.value)}
                                     type="text"
                                 />
-                                {!hasName && <div className="text-red-600">Product name can't be empty</div>}
+                                {hasName && <div className="text-red-600">{hasName}</div>}
 
                             </div>
                             <div className="grid w-full items-center gap-1.5">
@@ -159,10 +170,10 @@ export const columns: ColumnDef<Product>[] = [
                                     type="number"
                                     min="0"
                                     step="any"
-                                    onChange={(event) => { setProductPrice(event.target.value) }}
+                                    onChange={(event) => { setProductPrice(+event.target.value) }}
                                     className="col-span-3"
                                 />
-                                {!hasPrice && <div className="text-red-600">Product price can't be empty</div>}
+                                {hasPrice && <div className="text-red-600">{hasPrice}</div>}
 
                             </div>
 
