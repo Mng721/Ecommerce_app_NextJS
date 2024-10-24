@@ -176,6 +176,11 @@ export const columns: ColumnDef<Product>[] = [
                                     accept="image/*"
                                     onChange={(event) => {
                                         if (event.target.files === null) return
+                                        if (event.target.files.length === 0) {
+                                            setFile(null);
+                                            setPreviewImg(avatar);
+                                            return
+                                        }
                                         if (event.target.files[0] === null) return
                                         setPreviewImg(URL.createObjectURL(event.target.files[0]!))
                                         setFile(event.target.files[0])
