@@ -12,6 +12,7 @@ import { Input } from "~/components/ui/input"
 import { useRouter } from "next/navigation"
 import axios from "axios"
 import { ProductSchema } from "./util"
+import { useToast } from "~/hooks/use-toast"
 export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: "id",
@@ -40,7 +41,6 @@ export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: "price",
         header: "Price",
-
         cell: ({ row }) => {
             const amount = parseFloat(row.getValue("price"))
 
@@ -71,11 +71,14 @@ export const columns: ColumnDef<Product>[] = [
             const [hasPrice, setHasPrice] = useState<any>("")
             const [hasImg, setHasImg] = useState<any>("")
             const [file, setFile] = useState<any>(null)
+            const [loadingSave, setLoadingSave] = useState(false)
             const id: number = row.getValue("id")
             const name: string = row.getValue("name")
             const price: any = row.getValue("price")
             const avatar: any = row.getValue("avatar")
             const router = useRouter()
+            const { toast } = useToast()
+
             const handleSaveChange = async (event: any) => {
                 setHasName("")
                 setHasPrice("")
@@ -108,20 +111,26 @@ export const columns: ColumnDef<Product>[] = [
                     const formData = new FormData();
                     formData.append('file', file);
                     formData.append('upload_preset', 'product_img');
-                    try {
-                        const response = await axios.post(
-                            "https://api.cloudinary.com/v1_1/dtwie44qs/image/upload",
-                            formData
-                        );
+                    setLoadingSave(true)
+                    await axios.post(
+                        "https://api.cloudinary.com/v1_1/dtwie44qs/image/upload",
+                        formData
+                    ).then((response) => {
                         let productImgUrl = `https://res.cloudinary.com/dtwie44qs/image/upload/v${response.data.version}/${response.data.public_id}.png`
                         updateProduct(id, productName, productImgUrl, productPrice);
-
-                    } catch (error) {
+                        toast({ title: "Save change successfully" })
+                    }).catch((error) => {
+                        setLoadingSave(false)
+                        toast({ title: error.code, description: error.message, variant: "destructive" })
                         console.error(error);
-                    }
+                        return
+                    })
                 } else {
+                    setLoadingSave(true)
                     updateProduct(id, productName, previewImg, productPrice)
+                    toast({ title: "Save change successfully" })
                 }
+                setLoadingSave(false)
                 router.refresh()
                 setOpen(false)
             }
@@ -220,7 +229,7 @@ export const columns: ColumnDef<Product>[] = [
                                     Close
                                 </Button>
                             </DialogClose>
-                            <Button type="submit" onClick={handleSaveChange}>Save changes</Button>
+                            <Button type="submit" onClick={handleSaveChange} disabled={loadingSave} className="select-none">{loadingSave ? "Loading..." : "Save changes"}</Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>

@@ -29,6 +29,9 @@ import { useRouter } from "next/navigation"
 import axios from "axios"
 import { addNewProduct } from "./action"
 import { ProductSchema } from "./util"
+import { useToast } from "~/hooks/use-toast"
+import { error } from "console"
+import { title } from "process"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -51,7 +54,9 @@ export function DataTable<TData, TValue>({
     const [hasPrice, setHasPrice] = useState<any>("")
     const [hasImg, setHasImg] = useState<any>("")
     const [file, setFile] = useState<any>(null)
+    const [saveLoading, setSaveLoading] = useState(false)
     const router = useRouter()
+    const { toast } = useToast()
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0, //initial page index
         pageSize: 4, //default page size
@@ -88,22 +93,26 @@ export function DataTable<TData, TValue>({
 
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('upload_preset', 'product_img');
-        try {
-            const response = await axios.post(
-                "https://api.cloudinary.com/v1_1/dtwie44qs/image/upload",
-                formData
-            );
-            let productImgUrl = `https://res.cloudinary.com/dtwie44qs/image/upload/v${response.data.version}/${response.data.public_id}.png`
+        formData.append('upload_preset', 'product_img')
+        setSaveLoading(true)
+        await axios.post(
+            "https://api.cloudinary.com/v1_1/dtwie44qs/image/upload",
+            formData
+        ).then((res) => {
+            let productImgUrl = `https://res.cloudinary.com/dtwie44qs/image/upload/v${res.data.version}/${res.data.public_id}.png`
             addNewProduct(productName, productImgUrl, productPrice);
-        } catch (error) {
-            console.error(error);
-        }
-        setPreviewImg("");
-        setProductName("");
-        setProductPrice("");
-        setOpen(false);
-        router.refresh()
+            toast({ title: "Add new product Successfully" })
+            setPreviewImg("");
+            setProductName("");
+            setProductPrice("");
+            setSaveLoading(false)
+            setOpen(false);
+            router.refresh()
+        }).catch((error) => {
+            toast({ title: error.code, description: error.message, variant: "destructive" })
+            setSaveLoading(false)
+        })
+
     }
 
     const table = useReactTable({
@@ -142,7 +151,7 @@ export function DataTable<TData, TValue>({
                     setProductPrice("")
                 }}>
                     <DialogTrigger asChild>
-                        <Button variant={"default"} onClick={() => setOpen(true)}>Add products</Button>
+                        <Button variant={"default"} onClick={() => setOpen(true)} disabled={open}>Add products</Button>
                     </DialogTrigger>
                     <DialogContent className="" aria-describedby={undefined}>
                         <DialogHeader>
@@ -210,7 +219,7 @@ export function DataTable<TData, TValue>({
                                     Close
                                 </Button>
                             </DialogClose>
-                            <Button type="submit" onClick={(event) => handleAddProduct(event)}>Save changes</Button>
+                            <Button type="submit" onClick={(event) => handleAddProduct(event)} disabled={saveLoading} className="select-none">{saveLoading ? "Loading..." : "Save"}</Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>

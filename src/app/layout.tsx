@@ -5,6 +5,7 @@ import HeaderNavbar from "./_components/header/headernavbar";
 import FooterContent from "./_components/footer/footer";
 import Providers from "./_components/Provider";
 import SessionWrapper from "./_components/SessionWrapper";
+import { Toaster } from "~/components/ui/toaster";
 export const metadata: Metadata = {
   title: "E-commerce App",
   description: "Build by mng721",
@@ -25,6 +26,7 @@ export default function RootLayout({
             <HeaderNavbar />
             {children}
             <FooterContent />
+            <Toaster />
           </Providers>
         </SessionWrapper>
       </body>
