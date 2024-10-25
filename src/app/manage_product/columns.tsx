@@ -72,6 +72,7 @@ export const columns: ColumnDef<Product>[] = [
             const [hasImg, setHasImg] = useState<any>("")
             const [file, setFile] = useState<any>(null)
             const [loadingSave, setLoadingSave] = useState(false)
+            const [loadingRemove, setLoadingRemove] = useState(false)
             const id: number = row.getValue("id")
             const name: string = row.getValue("name")
             const price: any = row.getValue("price")
@@ -136,8 +137,19 @@ export const columns: ColumnDef<Product>[] = [
             }
 
             const handleDelete = () => {
-                removeProduct(row.getValue("id"));
-                router.refresh()
+                setLoadingRemove(true)
+                removeProduct(row.getValue("id"))
+                    .then(() => {
+                        setLoadingRemove(false)
+                        toast({ title: "Remove product successfully" })
+                        setOpenDeleteDialog(false)
+                        router.refresh()
+                    })
+                    .catch((error) => {
+                        setLoadingRemove(false)
+                        toast({ title: error.code, description: error.message, variant: "destructive" })
+                        return
+                    });
             }
             useEffect(() => {
                 setProductName(name);
@@ -253,7 +265,7 @@ export const columns: ColumnDef<Product>[] = [
                                     Close
                                 </Button>
                             </DialogClose>
-                            <Button type="submit" onClick={handleDelete} variant={"destructive"}>Remove</Button>
+                            <Button type="submit" onClick={handleDelete} variant={"destructive"} disabled={loadingRemove} className="select-none">{loadingRemove ? "Loading..." : "Remove"}</Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
