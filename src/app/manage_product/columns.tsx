@@ -17,14 +17,17 @@ export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: "id",
         header: "ID",
+        size: 150
     },
     {
         accessorKey: "avatar",
         header: "Image",
+        size: 300,
         cell: ({ row }) => (<img src={row.getValue("avatar")} alt={row.getValue("name")} className="size-28 object-cover" />)
     },
     {
         accessorKey: "name",
+        size: 500,
         header: ({ column }) => {
             return (
                 <Button
@@ -41,6 +44,8 @@ export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: "price",
         header: "Price",
+        size: 700,
+        maxSize: 700,
         cell: ({ row }) => {
             const amount = parseFloat(row.getValue("price"))
 
@@ -50,17 +55,19 @@ export const columns: ColumnDef<Product>[] = [
                 currency: "USD",
             }).format(amount)
 
-            return <div className="font-medium">{formatted}</div>
+            return <div className="font-medium overflow-ellipsis">{formatted}</div>
         }
     },
 
     {
         accessorKey: "rating",
         header: "Rating",
+        size: 150
     },
     {
         id: "function",
         header: () => { return <div className="flex flex-row justify-end">Function</div> },
+        size: 500,
         cell: ({ row }) => {
             const [open, setOpen] = useState(false);
             const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
