@@ -63,6 +63,7 @@ export const columns: ColumnDef<Product>[] = [
         header: () => { return <div className="flex flex-row justify-end">Function</div> },
         cell: ({ row }) => {
             const [open, setOpen] = useState(false);
+            const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
             const [productName, setProductName] = useState("")
             const [previewImg, setPreviewImg] = useState("")
             const [productPrice, setProductPrice] = useState<any>("")
@@ -123,6 +124,11 @@ export const columns: ColumnDef<Product>[] = [
                 }
                 router.refresh()
                 setOpen(false)
+            }
+
+            const handleDelete = () => {
+                removeProduct(row.getValue("id"));
+                router.refresh()
             }
             useEffect(() => {
                 setProductName(name);
@@ -218,10 +224,31 @@ export const columns: ColumnDef<Product>[] = [
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
-                <Button variant={"destructive"} onClick={() => {
-                    removeProduct(row.getValue("id"));
-                    router.refresh()
-                }}>Remove</Button>
+                <Dialog open={openDeleteDialog} onOpenChange={() => {
+                    setOpenDeleteDialog(!openDeleteDialog)
+                }}>
+                    <DialogTrigger asChild>
+                        <Button variant={"destructive"} onClick={() => setOpenDeleteDialog(true)}>Remove</Button>
+
+                    </DialogTrigger>
+                    <DialogContent className="" aria-describedby={undefined}>
+                        <DialogHeader>
+                            <DialogTitle >Confirm remove</DialogTitle>
+                        </DialogHeader>
+                        <div>Are you sure you want to remove this item?</div>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <Button type="button" variant="secondary" onClick={() => {
+                                    setOpenDeleteDialog(false)
+                                }}>
+                                    Close
+                                </Button>
+                            </DialogClose>
+                            <Button type="submit" onClick={handleDelete} variant={"destructive"}>Remove</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
             </div>)
         }
     },
