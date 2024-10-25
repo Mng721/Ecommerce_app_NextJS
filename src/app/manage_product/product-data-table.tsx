@@ -294,6 +294,9 @@ export function DataTable<TData, TValue>({
                     onChange={(event: React.ChangeEvent<unknown>, value: number) => {
                         const page = value ? value - 1 : 0
                         if (page > table.getPageCount()) {
+                            value = table.getPageCount()
+                            table.setPageIndex(value - 1)
+                            return
                         }
                         table.setPageIndex(page)
                     }
