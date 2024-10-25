@@ -118,8 +118,12 @@ export const columns: ColumnDef<Product>[] = [
                         formData
                     ).then((response) => {
                         let productImgUrl = `https://res.cloudinary.com/dtwie44qs/image/upload/v${response.data.version}/${response.data.public_id}.png`
-                        updateProduct(id, productName, productImgUrl, productPrice);
-                        toast({ title: "Save change successfully" })
+                        updateProduct(id, productName, productImgUrl, productPrice).then(() => {
+                            toast({ title: "Save change successfully" })
+                            setLoadingSave(false)
+                            router.refresh()
+                            setOpen(false)
+                        })
                     }).catch((error) => {
                         setLoadingSave(false)
                         toast({ title: error.code, description: error.message, variant: "destructive" })
@@ -128,12 +132,18 @@ export const columns: ColumnDef<Product>[] = [
                     })
                 } else {
                     setLoadingSave(true)
-                    updateProduct(id, productName, previewImg, productPrice)
-                    toast({ title: "Save change successfully" })
+                    updateProduct(id, productName, previewImg, productPrice).then(() => {
+                        toast({ title: "Save change successfully" })
+                        setLoadingSave(false)
+                        router.refresh()
+                        setOpen(false)
+                    }).catch((error) => {
+                        setLoadingSave(false)
+                        toast({ title: error.code, description: error.message, variant: "destructive" })
+                        console.error(error);
+                        return
+                    })
                 }
-                setLoadingSave(false)
-                router.refresh()
-                setOpen(false)
             }
 
             const handleDelete = () => {

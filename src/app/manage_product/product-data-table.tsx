@@ -98,14 +98,15 @@ export function DataTable<TData, TValue>({
             formData
         ).then((res) => {
             let productImgUrl = `https://res.cloudinary.com/dtwie44qs/image/upload/v${res.data.version}/${res.data.public_id}.png`
-            addNewProduct(productName, productImgUrl, productPrice);
-            toast({ title: "Add new product Successfully" })
-            setPreviewImg("");
-            setProductName("");
-            setProductPrice("");
-            setSaveLoading(false)
-            setOpen(false);
-            router.refresh()
+            addNewProduct(productName, productImgUrl, productPrice).then(() => {
+                toast({ title: "Add new product Successfully" })
+                setPreviewImg("");
+                setProductName("");
+                setProductPrice("");
+                setSaveLoading(false)
+                setOpen(false);
+                router.refresh()
+            });
         }).catch((error) => {
             toast({ title: error.code, description: error.message, variant: "destructive" })
             setSaveLoading(false)
