@@ -292,8 +292,9 @@ export function DataTable<TData, TValue>({
                     variant="outlined"
                     shape="rounded"
                     onChange={(event: React.ChangeEvent<unknown>, value: number) => {
-
                         const page = value ? value - 1 : 0
+                        if (page > table.getPageCount()) {
+                        }
                         table.setPageIndex(page)
                     }
                     } />
@@ -301,6 +302,9 @@ export function DataTable<TData, TValue>({
                     value={table.getState().pagination.pageSize}
                     onChange={e => {
                         table.setPageSize(Number(e.target.value))
+                        if (table.getState().pagination.pageIndex + 1 > table.getPageCount()) {
+                            table.setPageIndex(table.getPageCount())
+                        }
                     }}
                     className="border-[1px] p-2 rounded-lg"
                 >
