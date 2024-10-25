@@ -30,8 +30,6 @@ import axios from "axios"
 import { addNewProduct } from "./action"
 import { ProductSchema } from "./util"
 import { useToast } from "~/hooks/use-toast"
-import { error } from "console"
-import { title } from "process"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -112,7 +110,6 @@ export function DataTable<TData, TValue>({
             toast({ title: error.code, description: error.message, variant: "destructive" })
             setSaveLoading(false)
         })
-
     }
 
     const table = useReactTable({
