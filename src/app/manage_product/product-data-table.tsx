@@ -30,6 +30,7 @@ import axios from "axios"
 import { addNewProduct } from "./action"
 import { ProductSchema } from "./util"
 import { useToast } from "~/hooks/use-toast"
+import { Pagination } from "@mui/material"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -57,7 +58,7 @@ export function DataTable<TData, TValue>({
     const { toast } = useToast()
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0, //initial page index
-        pageSize: 4, //default page size
+        pageSize: 5, //default page size
     })
     const handleAddProduct = async (event: any) => {
         setHasName("")
@@ -270,8 +271,8 @@ export function DataTable<TData, TValue>({
 
             </div>
 
-            <div className="space-x-2 mx-auto my-2">
-                <Button
+            <div className="space-x-2 mx-auto my-2 flex flex-row items-center">
+                {/* <Button
                     variant="outline"
                     size="default"
                     onClick={() => table.previousPage()}
@@ -286,7 +287,50 @@ export function DataTable<TData, TValue>({
                     disabled={!table.getCanNextPage()}
                 >
                     Next
-                </Button>
+                </Button> */}
+                <Pagination count={table.getPageCount()}
+                    variant="outlined"
+                    shape="rounded"
+                    onChange={(event: React.ChangeEvent<unknown>, value: number) => {
+
+                        const page = value ? value - 1 : 0
+                        table.setPageIndex(page)
+                    }
+                    } />
+                <select
+                    value={table.getState().pagination.pageSize}
+                    onChange={e => {
+                        table.setPageSize(Number(e.target.value))
+                    }}
+                    className="border-[1px] p-2 rounded-lg"
+                >
+                    {[1, 5, 10, 15, 20, 25].map(pageSize => (
+                        <option key={pageSize} value={pageSize}>
+                            {pageSize} / Trang
+                        </option>
+                    ))}
+                </select>
+                <span className="flex items-center gap-1">
+                    <div>Trang</div>
+                    <strong>
+                        {table.getState().pagination.pageIndex + 1} trong {' '}
+                        {table.getPageCount().toLocaleString()}
+                    </strong>
+                </span>
+                <div className="flex items-center gap-1">
+                    | Đến trang
+                    <input
+                        type="number"
+                        min="1"
+                        max={table.getPageCount()}
+                        defaultValue={table.getState().pagination.pageIndex + 1}
+                        onChange={e => {
+                            const page = e.target.value ? Number(e.target.value) - 1 : 0
+                            table.setPageIndex(page)
+                        }}
+                        className="border p-1 rounded w-16"
+                    />
+                </div>
             </div>
         </div>
     )
