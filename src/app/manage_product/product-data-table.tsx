@@ -105,12 +105,14 @@ export function DataTable<TData, TValue>({
                 setPreviewImg("");
                 setProductName("");
                 setProductPrice("");
+                setSaveLoading(false)
                 setOpen(false);
                 router.refresh()
             });
         }).catch((error) => {
             toast({ title: error.code, description: error.message, variant: "destructive" })
-        }).finally(() => { setSaveLoading(false) })
+            setSaveLoading(false)
+        })
     }
 
     const table = useReactTable({

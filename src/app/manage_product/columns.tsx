@@ -141,14 +141,14 @@ export const columns: ColumnDef<Product>[] = [
                     setLoadingSave(true)
                     updateProduct(id, productName, previewImg, productPrice).then(() => {
                         toast({ title: "Save change successfully" })
+                        setLoadingSave(false)
                         router.refresh()
                         setOpen(false)
                     }).catch((error) => {
+                        setLoadingSave(false)
                         toast({ title: error.code, description: error.message, variant: "destructive" })
                         console.error(error);
                         return
-                    }).finally(() => {
-                        setLoadingSave(false)
                     })
                 }
             }
@@ -157,16 +157,15 @@ export const columns: ColumnDef<Product>[] = [
                 setLoadingRemove(true)
                 removeProduct(row.getValue("id"))
                     .then(() => {
+                        setLoadingRemove(false)
                         toast({ title: "Remove product successfully" })
                         setOpenDeleteDialog(false)
                         router.refresh()
                     })
                     .catch((error) => {
+                        setLoadingRemove(false)
                         toast({ title: error.code, description: error.message, variant: "destructive" })
                         return
-                    })
-                    .finally(() => {
-                        setLoadingRemove(false)
                     });
             }
             useEffect(() => {
