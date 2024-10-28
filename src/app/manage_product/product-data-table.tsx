@@ -60,6 +60,7 @@ export function DataTable<TData, TValue>({
         pageIndex: 0, //initial page index
         pageSize: 5, //default page size
     })
+
     const handleAddProduct = async (event: any) => {
         setHasName("")
         setHasPrice("")
@@ -104,14 +105,12 @@ export function DataTable<TData, TValue>({
                 setPreviewImg("");
                 setProductName("");
                 setProductPrice("");
-                setSaveLoading(false)
                 setOpen(false);
                 router.refresh()
             });
         }).catch((error) => {
             toast({ title: error.code, description: error.message, variant: "destructive" })
-            setSaveLoading(false)
-        })
+        }).finally(() => { setSaveLoading(false) })
     }
 
     const table = useReactTable({
@@ -272,32 +271,11 @@ export function DataTable<TData, TValue>({
             </div>
 
             <div className="space-x-2 mx-auto my-2 flex flex-row items-center">
-                {/* <Button
-                    variant="outline"
-                    size="default"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    Previous
-                </Button>
-                <Button
-                    variant="outline"
-                    size="default"
-                    onClick={() => { table.nextPage() }}
-                    disabled={!table.getCanNextPage()}
-                >
-                    Next
-                </Button> */}
                 <Pagination count={table.getPageCount()}
                     variant="outlined"
                     shape="rounded"
                     onChange={(event: React.ChangeEvent<unknown>, value: number) => {
                         const page = value ? value - 1 : 0
-                        if (page > table.getPageCount()) {
-                            value = table.getPageCount()
-                            table.setPageIndex(value - 1)
-                            return
-                        }
                         table.setPageIndex(page)
                     }
                     } />
@@ -305,9 +283,7 @@ export function DataTable<TData, TValue>({
                     value={table.getState().pagination.pageSize}
                     onChange={e => {
                         table.setPageSize(Number(e.target.value))
-                        if (table.getState().pagination.pageIndex + 1 > table.getPageCount()) {
-                            table.setPageIndex(table.getPageCount())
-                        }
+                        table.setPageIndex(0)
                     }}
                     className="border-[1px] p-2 rounded-lg"
                 >
