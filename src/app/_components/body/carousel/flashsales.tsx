@@ -14,7 +14,7 @@ export default function FlashSalesCarousel() {
     const [emblaRef, emblaApi] = useEmblaCarousel({ slidesToScroll: 5, align: 'start', loop: false })
     const [countdown, setCountdown] = useState({ days: 70, hours: 15, minutes: 42, seconds: 5 })
     const [isLoading, setIsLoading] = useState(false)
-    const deadline = "December, 31, 2030";
+    const deadline = "December, 31, 2025";
 
     const getTime = () => {
         let time = Date.parse(deadline) - Date.now();

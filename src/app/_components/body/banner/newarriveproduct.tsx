@@ -5,7 +5,7 @@ import { images } from '~/app/_assets/image';
 
 const NewArriveProduct = () => {
     const [countdown, setCountdown] = useState({ days: 70, hours: 15, minutes: 42, seconds: 5 })
-    const deadline = "December, 31, 2024";
+    const deadline = "December, 31, 2025";
 
     const getTime = () => {
         let time = Date.parse(deadline) - Date.now();
