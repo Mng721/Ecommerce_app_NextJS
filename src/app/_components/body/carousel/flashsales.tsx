@@ -14,7 +14,7 @@ export default function FlashSalesCarousel() {
     const [emblaRef, emblaApi] = useEmblaCarousel({ slidesToScroll: 5, align: 'start', loop: false })
     const [countdown, setCountdown] = useState({ days: 70, hours: 15, minutes: 42, seconds: 5 })
     const [isLoading, setIsLoading] = useState(false)
-    const deadline = "December, 31, 2024";
+    const deadline = "December, 31, 2030";
 
     const getTime = () => {
         let time = Date.parse(deadline) - Date.now();
@@ -34,7 +34,6 @@ export default function FlashSalesCarousel() {
                 setHasMore(false)
             }
             let newList = [...listProduct, ...res.data];
-            console.log(listProduct, newList)
             setListProduct(newList);
         } catch (error) {
             console.error('Error fetching items:', error)

@@ -88,11 +88,11 @@ export default function HeaderNavbar() {
     <div className="h-auto bg-background">
       <header className="border-b">
         <div className="lg:container mx-auto px-4 py-3 flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Exclusive</h1>
+          <h1 className="text-3xl font-bold select-none ">Exclusive</h1>
           <nav className="hidden md:flex space-x-4 md:grow md:justify-around md:px-1 xl:px-32">
             <Link href="/" className="text-foreground hover:text-primary hidden xl:block">Home</Link>
-            <Link href="/" className="text-foreground hover:text-primary">Contact</Link>
-            <Link href="/" className="text-foreground hover:text-primary">About</Link>
+            <Link href="/contact" className="text-foreground hover:text-primary">Contact</Link>
+            <Link href="/about" className="text-foreground hover:text-primary">About</Link>
             {status === "unauthenticated" ? <Link href="/login" className="text-foreground hover:text-primary">Log in</Link> : <Link href="/manage_product" className="text-foreground hover:text-primary">Manage products</Link>}
           </nav>
           <div className="flex items-center space-x-4">

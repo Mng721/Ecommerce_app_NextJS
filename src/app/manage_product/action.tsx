@@ -19,6 +19,9 @@ export async function addNewProduct(productName: string, productImg: string, pro
     await db.insert(product).values({ name: productName, avatar: productImg, price: productPrice })
 }
 
+export async function getListProduct() {
+    return await db.query.product.findMany()
+}
 
 export async function removeProduct(id: number) {
     await db.delete(product).where(eq(product.id, id))
