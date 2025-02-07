@@ -2,7 +2,7 @@ import React from 'react'
 
 const page = () => {
     return (
-        <div>
+        <div className='container mx-auto px-4 flex flex-col justify-center min-h-screen'>
             This is contact page
         </div>
     )
