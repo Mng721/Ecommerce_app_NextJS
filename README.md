@@ -49,7 +49,7 @@ An e-commerce platform built using the **T3 App template** with **Next.js**, des
    git clone https://github.com/yourusername/ecommerce-website.git
    ```
 2. Navigate to the project directory:
- ```bash  
+   ```bash  
    cd ecommerce-website  
    ```
 
@@ -61,24 +61,24 @@ An e-commerce platform built using the **T3 App template** with **Next.js**, des
 4. Set up environment variables in a .env file:
    ```bash  
    DATABASE_URL=<your-vercel-postgresql-url>  
-    NEXTAUTH_SECRET=<your-nextauth-secret>  
-    NEXTAUTH_URL=http://localhost:3000  
-    STRIPE_SECRET_KEY=<your-stripe-secret-key>  
+   NEXTAUTH_SECRET=<your-nextauth-secret>  
+   NEXTAUTH_URL=http://localhost:3000  
+   STRIPE_SECRET_KEY=<your-stripe-secret-key>  
    ```
    
 5. Generate Prisma client:
-  ```bash
-    npx prisma generate  
+   ```bash
+   npx prisma generate  
    ```
 
 6. Run database migrations:
- ```bash
-    npx prisma migrate dev
+   ```bash
+   npx prisma migrate dev
    ```
 
 7. Start the development server:
-    ```bash
-    npm run dev
+   ```bash
+   npm run dev
    ```
 
 8. Open your browser and navigate to http://localhost:3000.
