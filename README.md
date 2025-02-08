@@ -1,29 +1,90 @@
-# Create T3 App
+# Ecommerce Website  
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+An e-commerce platform built using the **T3 App template** with **Next.js**, designed for seamless shopping experiences. The project includes a modern UI/UX, secure authentication, robust backend functionality, and integrates scalable database solutions with **Vercel PostgreSQL**.  
 
-## What's next? How do I make an app with this?
+## Features  
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- **Responsive Design**: User-friendly interface built with **Tailwind CSS**, optimized for both desktop and mobile devices.  
+- **Product Management**: Includes product search, category filters, and dynamic product displays.  
+- **User Authentication**: Implemented using **NextAuth.js** for secure login and account management.  
+- **Database Management**: Utilizes **Vercel PostgreSQL** for efficient and scalable data storage.  
+- **TypeScript Support**: Maintains type safety and cleaner code using TypeScript.  
+- **Deployment**: Hosted on **Vercel**, leveraging its serverless architecture for scalability and performance.  
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Tech Stack  
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+### Frontend  
+- **Next.js** (with **React**)  
+- **Tailwind CSS**  
 
-## Learn More
+### Backend  
+- **Next.js API Routes**  
+- **tRPC** for type-safe API communication  
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+### Authentication  
+- **NextAuth.js**  
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+### Database  
+- **PostgreSQL** (via **Vercel PostgreSQL**)  
+- **Drizzle ORM**  
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+### Deployment  
+- **Vercel**  
 
-## How do I deploy this?
+### Development Tools  
+- **TypeScript** for type-safe development  
+- **ESLint** and **Prettier** for code quality and formatting  
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+## Installation  
+
+### Prerequisites  
+- **Node.js** (v16 or higher)  
+- **npm** or **yarn**  
+- A **PostgreSQL** database (e.g., Vercel PostgreSQL)  
+
+### Steps  
+
+1. Clone the repository:  
+   ```bash  
+   git clone https://github.com/yourusername/ecommerce-website.git
+   ```
+2. Navigate to the project directory:
+ ```bash  
+   cd ecommerce-website  
+   ```
+
+3. Install dependencies:  
+   ```bash  
+   npm install  
+   ```
+
+4. Set up environment variables in a .env file:
+   ```bash  
+   DATABASE_URL=<your-vercel-postgresql-url>  
+    NEXTAUTH_SECRET=<your-nextauth-secret>  
+    NEXTAUTH_URL=http://localhost:3000  
+    STRIPE_SECRET_KEY=<your-stripe-secret-key>  
+   ```
+   
+5. Generate Prisma client:
+  ```bash
+    npx prisma generate  
+   ```
+
+6. Run database migrations:
+ ```bash
+    npx prisma migrate dev
+   ```
+
+7. Start the development server:
+    ```bash
+    npm run dev
+   ```
+
+8. Open your browser and navigate to http://localhost:3000.
+
+### Acknowledgments
+- T3 App Template for the project boilerplate.
+- Vercel for hosting and database solutions.
+- Drizzle for database ORM.
+- Tailwind CSS for the responsive UI design framework.
